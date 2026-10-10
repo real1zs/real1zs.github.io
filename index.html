@@ -1,39 +1,758 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>你的名字 | 个人主页</title>
-  <style>
-    body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; max-width: 860px; margin: 48px auto; padding: 0 16px; line-height: 1.6;}
-    header{margin-bottom: 28px;}
-    .card{padding:16px 18px; border:1px solid #e5e7eb; border-radius:12px; margin: 12px 0;}
-    a{color:#2563eb; text-decoration:none;}
-    a:hover{text-decoration:underline;}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[你的姓名] — Personal Homepage</title>
+<!--
+  ============================================================
+  使用说明（交付后请按注释逐项替换）
+  ------------------------------------------------------------
+  全文搜索「✏️【替换点】」即可定位所有需要你自行填写的位置。
+  所有方括号包裹的文案（如 [你的姓名]）均为占位符，请直接替换。
+  本文件零依赖：无外部 CSS / JS / 字体 / 图片，双击即可在浏览器打开。
+  ============================================================
+-->
+<style>
+/* ==========================================================
+   1. 设计变量（改这里就能整体换色）
+   ========================================================== */
+:root{
+  --ink:      #111111;   /* 主文字 / 深色底 */
+  --paper:    #ffffff;   /* 主背景 / 浅色底 */
+  --muted:    #8a8a8a;   /* 次要文字、占位符 */
+  --line:     #e4e4e4;   /* 细线条分隔 */
+  --block:    #f2f2f2;   /* 作品图占位块底色 */
+  --hover:    #ededed;   /* 悬停时的占位块底色 */
+
+  --pad:      32px;      /* 页面左右安全边距 */
+  --max:      1120px;    /* 内容最大宽度 */
+  --ease:     cubic-bezier(.22,.61,.36,1);  /* 统一过渡曲线 */
+}
+
+/* ==========================================================
+   2. 基础重置
+   ========================================================== */
+*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+
+html{
+  /* 平滑滚动：点击导航锚点时缓动到目标版块 */
+  scroll-behavior:smooth;
+  /* 顶部导航是吸顶的，锚点跳转时预留出导航高度，避免标题被遮挡 */
+  scroll-padding-top:96px;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  background:var(--paper);
+  color:var(--ink);
+  /* 无衬线字体栈：全部使用系统自带字体，不加载任何外部字体 */
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",
+              Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:16px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+a{ color:inherit; text-decoration:none; }
+img{ max-width:100%; display:block; }
+
+/* 统一键盘焦点样式（无障碍） */
+:focus-visible{ outline:2px solid var(--ink); outline-offset:4px; }
+
+/* ==========================================================
+   3. 通用布局
+   ========================================================== */
+.wrap{
+  width:100%;
+  max-width:var(--max);
+  margin:0 auto;
+  padding:0 var(--pad);
+}
+
+/* 版块：大量留白是这套版式的核心，纵向间距给得比常规更宽 */
+.section{ padding:120px 0; }
+.section + .section{ padding-top:0; }
+
+/* 版块小标题：编号 + 全大写英文标签 */
+.label{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  font-size:11px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:56px;
+}
+.label::after{
+  /* 标题右侧延伸出的一条细线，填充剩余空间 */
+  content:"";
+  flex:1;
+  height:1px;
+  background:var(--line);
+}
+
+/* ==========================================================
+   4. 顶部导航
+   ========================================================== */
+.nav{
+  position:sticky;   /* 吸顶 */
+  top:0;
+  z-index:100;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:saturate(180%) blur(12px);   /* 毛玻璃，不支持的浏览器自动忽略 */
+  -webkit-backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid transparent;
+  transition:border-color .3s var(--ease), background .3s var(--ease);
+}
+.nav.is-scrolled{ border-bottom-color:var(--line); }   /* 滚动后才显示下边框 */
+
+.nav__inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  height:76px;
+}
+
+/* ✏️【替换点】左上角的姓名 logo */
+.nav__name{
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:.28em;      /* 加大字距 */
+  text-transform:uppercase;
+  white-space:nowrap;
+  transition:opacity .25s var(--ease);
+}
+.nav__name:hover{ opacity:.55; }
+
+.nav__links{
+  display:flex;
+  align-items:center;
+  gap:34px;
+  list-style:none;
+}
+.nav__links a{
+  position:relative;
+  font-size:11px;
+  font-weight:500;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--muted);
+  padding:6px 0;
+  transition:color .25s var(--ease);
+}
+/* 悬停 / 当前版块：文字变黑，并长出一条下划线 */
+.nav__links a::after{
+  content:"";
+  position:absolute;
+  left:0; bottom:0;
+  width:100%; height:1px;
+  background:var(--ink);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform .3s var(--ease);
+}
+.nav__links a:hover{ color:var(--ink); }
+.nav__links a:hover::after,
+.nav__links a.is-active::after{ transform:scaleX(1); }
+.nav__links a.is-active{ color:var(--ink); }
+
+/* 移动端汉堡按钮（桌面端隐藏） */
+.nav__toggle{
+  display:none;
+  width:32px; height:32px;
+  border:0; background:transparent;
+  cursor:pointer;
+  position:relative;
+  color:inherit;
+}
+.nav__toggle span{
+  position:absolute; left:4px; right:4px;
+  height:1px; background:var(--ink);
+  transition:transform .3s var(--ease), opacity .2s var(--ease);
+}
+.nav__toggle span:nth-child(1){ top:12px; }
+.nav__toggle span:nth-child(2){ bottom:12px; }
+.nav__toggle.is-open span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
+.nav__toggle.is-open span:nth-child(2){ transform:translateY(-6px) rotate(-45deg); }
+
+/* ==========================================================
+   5. 首屏 Hero
+   ========================================================== */
+.hero{
+  min-height:calc(100vh - 76px);   /* 减去导航高度，正好占满一屏 */
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:80px 0 120px;
+}
+
+/* ✏️【替换点】首屏大字姓名 */
+.hero__name{
+  font-size:clamp(46px, 11vw, 132px);   /* 随视口平滑缩放 */
+  font-weight:600;
+  line-height:.98;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+}
+
+/* ✏️【替换点】姓名下方的一行身份标签 */
+.hero__tag{
+  margin-top:32px;
+  font-size:13px;
+  letter-spacing:.26em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+.hero__scroll{
+  margin-top:96px;
+  font-size:11px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--muted);
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  align-self:flex-start;
+  transition:color .25s var(--ease);
+}
+.hero__scroll:hover{ color:var(--ink); }
+.hero__scroll::after{
+  content:"";
+  width:56px; height:1px;
+  background:var(--line);
+  transition:width .3s var(--ease), background .3s var(--ease);
+}
+.hero__scroll:hover::after{ width:80px; background:var(--ink); }
+
+/* ==========================================================
+   6. 自我介绍
+   ========================================================== */
+.about__text{
+  max-width:640px;          /* 控制每行字数，保证阅读节奏 */
+  font-size:19px;
+  line-height:1.9;
+  color:#2b2b2b;
+}
+
+/* ==========================================================
+   7. 作品集
+   ========================================================== */
+.work__grid{
+  display:grid;
+  /* 自适应网格：尽量多列，单列最小 300px，放不下就自动换行 */
+  grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+  gap:64px 40px;
+}
+
+.card{ display:block; }
+
+/* 灰色占位图块：4:3 比例，中间用两条对角线暗示「此处放图」 */
+.card__thumb{
+  position:relative;
+  aspect-ratio:4 / 3;
+  background:var(--block);
+  overflow:hidden;
+  transition:background .35s var(--ease);
+}
+.card:hover .card__thumb{ background:var(--hover); }
+
+.card__thumb::before,
+.card__thumb::after{
+  content:"";
+  position:absolute; top:0; left:0;
+  width:100%; height:100%;
+  background-image:linear-gradient(to bottom right,
+      transparent calc(50% - .5px), var(--line) 50%, transparent calc(50% + .5px));
+  transition:transform .5s var(--ease), opacity .35s var(--ease);
+}
+.card__thumb::before{ background-image:linear-gradient(to bottom left,
+      transparent calc(50% - .5px), var(--line) 50%, transparent calc(50% + .5px)); }
+.card:hover .card__thumb::before{ transform:scale(1.04); opacity:.6; }
+.card:hover .card__thumb::after{ transform:scale(1.04); opacity:.6; }
+
+/* 占位图块上的文字提示 */
+.card__ph{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--muted);
+  transition:opacity .35s var(--ease);
+}
+
+.card__meta{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:22px;
+}
+/* ✏️【替换点】作品标题 */
+.card__title{
+  font-size:17px;
+  font-weight:600;
+  letter-spacing:.01em;
+}
+/* ✏️【替换点】作品年份 / 类别（可选，不需要就删掉这个元素） */
+.card__year{
+  font-size:11px;
+  letter-spacing:.16em;
+  color:var(--muted);
+  white-space:nowrap;
+}
+/* ✏️【替换点】作品简短描述 */
+.card__desc{
+  margin-top:10px;
+  font-size:14px;
+  line-height:1.7;
+  color:var(--muted);
+  transition:color .25s var(--ease);
+}
+.card:hover .card__desc{ color:#444; }
+
+/* ==========================================================
+   8. 联系方式
+   ========================================================== */
+.contact__list{
+  list-style:none;
+  border-top:1px solid var(--line);
+  max-width:720px;
+}
+.contact__item{ border-bottom:1px solid var(--line); }
+
+/* 每行：左侧标签 + 右侧值，悬停时整行右移一点点 */
+.contact__link{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:24px;
+  padding:26px 0;
+  transition:padding .35s var(--ease);
+}
+.contact__link:hover{ padding-left:14px; }
+
+.contact__key{
+  font-size:11px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:var(--muted);
+  flex-shrink:0;
+}
+.contact__val{
+  font-size:16px;
+  text-align:right;
+  word-break:break-word;      /* 邮箱过长时在移动端自动断行 */
+}
+.contact__link:hover .contact__val{ text-decoration:underline; text-underline-offset:5px; }
+
+/* ==========================================================
+   9. 页脚
+   ========================================================== */
+.footer{
+  border-top:1px solid var(--line);
+  padding:40px 0 56px;
+}
+.footer__inner{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* ==========================================================
+   10. 出场动画（滚动进入视口时淡入上移）
+   ========================================================== */
+.reveal{
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity .7s var(--ease), transform .7s var(--ease);
+}
+.reveal.is-in{ opacity:1; transform:none; }
+/* 依次延迟出现，营造节奏感 */
+.reveal--d1{ transition-delay:.08s; }
+.reveal--d2{ transition-delay:.16s; }
+.reveal--d3{ transition-delay:.24s; }
+
+/* 用户在系统中开启了「减少动态效果」时，关掉所有过渡与动画 */
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  *,*::before,*::after{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
+  .reveal{ opacity:1; transform:none; }
+}
+
+/* ==========================================================
+   11. 响应式：平板
+   ========================================================== */
+@media (max-width:860px){
+  :root{ --pad:24px; }
+  .section{ padding:96px 0; }
+  .hero{ min-height:auto; padding:56px 0 80px; }
+  .work__grid{ gap:52px 28px; }
+  .about__text{ font-size:17px; }
+}
+
+/* ==========================================================
+   12. 响应式：手机（单列堆叠）
+   ========================================================== */
+@media (max-width:640px){
+  :root{ --pad:20px; }
+
+  .nav__inner{ height:64px; }
+
+  /* 导航收成汉堡菜单 */
+  .nav__toggle{ display:block; }
+  .nav__links{
+    /* 默认隐藏；展开时以整块下拉形式铺满宽度 */
+    position:absolute;
+    top:64px; left:0; right:0;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:0;
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    padding:0 var(--pad);
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .4s var(--ease);
+  }
+  .nav__links.is-open{ max-height:340px; }
+  .nav__links li{ width:100%; }
+  .nav__links a{
+    display:block;
+    width:100%;
+    padding:18px 0;
+    border-bottom:1px solid var(--line);
+    font-size:12px;
+  }
+  .nav__links li:last-child a{ border-bottom:0; }
+  .nav__links a::after{ display:none; }   /* 移动端不需要下划线动效 */
+
+  .section{ padding:72px 0; }
+  .label{ margin-bottom:36px; }
+
+  /* 作品卡片在手机上强制单列 */
+  .work__grid{ grid-template-columns:1fr; gap:44px; }
+
+  .contact__link{ flex-direction:column; align-items:flex-start; gap:6px; padding:20px 0; }
+  .contact__val{ text-align:left; }
+
+  .footer__inner{ flex-direction:column; align-items:flex-start; }
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <h1>你的名字</h1>
-    <p>一句话自我介绍：方向 / 学校 / 城市 / 兴趣</p>
-    <p>
-      <a href="https://github.com/你的用户名">GitHub</a> ·
-      <a href="mailto:you@example.com">邮箱</a> ·
-      <a href="https://www.linkedin.com/in/xxx">LinkedIn</a>
-    </p>
-  </header>
 
-  <section class="card">
-    <h2>作品 / 项目</h2>
-    <ul>
-      <li><a href="https://github.com/你的用户名/项目1">项目1</a>：一句话说明你做了什么</li>
-      <li><a href="https://github.com/你的用户名/项目2">项目2</a>：一句话说明亮点</li>
-    </ul>
+<!-- =========================================================
+     顶部导航
+     ✏️【替换点】导航右侧的锚点链接文案（About / Work / Contact）
+     ✏️【替换点】如需增删版块，同步修改这里的 href="#xxx" 与对应版块的 id
+     ========================================================= -->
+<header class="nav" id="nav">
+  <div class="wrap nav__inner">
+    <!-- ✏️【替换点】左上角姓名 -->
+    <a class="nav__name" href="#top">[你的姓名]</a>
+
+    <nav>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="#about">About</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- 移动端汉堡按钮 -->
+    <button class="nav__toggle" id="navToggle" aria-label="展开导航菜单" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- =======================================================
+       首屏
+       ======================================================= -->
+  <section class="hero" aria-labelledby="heroName">
+    <div class="wrap">
+      <!-- ✏️【替换点】首屏大字姓名（建议与导航保持一致） -->
+      <h1 class="hero__name reveal" id="heroName">[你的姓名]</h1>
+
+      <!-- ✏️【替换点】一行身份标签，例：Designer / Developer / Based in Shanghai -->
+      <p class="hero__tag reveal reveal--d1">[此处填写身份标签，如职业 / 所在地]</p>
+
+      <a class="hero__scroll reveal reveal--d2" href="#about">往下浏览</a>
+    </div>
   </section>
 
-  <section class="card">
-    <h2>关于我</h2>
-    <p>这里写一段 3～6 句话的简介：你擅长什么、正在做什么、想找什么合作/机会。</p>
+  <!-- =======================================================
+       自我介绍
+       ======================================================= -->
+  <section class="section" id="about" aria-labelledby="aboutLabel">
+    <div class="wrap">
+      <h2 class="label reveal" id="aboutLabel">01 &nbsp;—&nbsp; About</h2>
+      <!-- ✏️【替换点】自我介绍正文，建议 2–4 句；可用 <br> 分段 -->
+      <p class="about__text reveal reveal--d1">
+        [此处填写自我介绍：你是谁、你在做什么、你关注或擅长的方向。保持一到三段，语气克制即可。]
+      </p>
+    </div>
   </section>
+
+  <!-- =======================================================
+       作品集（6 张卡片）
+       替换方式：整段复制 <article class="card">...</article> 即可增删数量，
+       网格会自动排列，无需改 CSS。
+       图块换成真图时：把 <div class="card__thumb">...</div>
+       替换为 <div class="card__thumb"><img src="..." alt="..."></div>
+       ======================================================= -->
+  <section class="section" id="work" aria-labelledby="workLabel">
+    <div class="wrap">
+      <h2 class="label reveal" id="workLabel">02 &nbsp;—&nbsp; Selected Work</h2>
+
+      <div class="work__grid">
+
+        <!-- 卡片 1 -->
+        <article class="card reveal">
+          <a href="#" aria-label="[作品标题 1]">
+            <div class="card__thumb"><span class="card__ph">[图片占位]</span></div>
+            <div class="card__meta">
+              <!-- ✏️【替换点】作品标题 -->
+              <h3 class="card__title">[作品标题 1]</h3>
+              <!-- ✏️【替换点】年份 / 类别 -->
+              <span class="card__year">[2026]</span>
+            </div>
+            <!-- ✏️【替换点】一句话描述 -->
+            <p class="card__desc">[此处填写作品的简短描述，一到两行说明它是什么、你承担的角色。]</p>
+          </a>
+        </article>
+
+        <!-- 卡片 2 -->
+        <article class="card reveal reveal--d1">
+          <a href="#" aria-label="[作品标题 2]">
+            <div class="card__thumb"><span class="card__ph">[图片占位]</span></div>
+            <div class="card__meta">
+              <h3 class="card__title">[作品标题 2]</h3>
+              <span class="card__year">[2026]</span>
+            </div>
+            <p class="card__desc">[此处填写作品的简短描述，一到两行说明它是什么、你承担的角色。]</p>
+          </a>
+        </article>
+
+        <!-- 卡片 3 -->
+        <article class="card reveal reveal--d2">
+          <a href="#" aria-label="[作品标题 3]">
+            <div class="card__thumb"><span class="card__ph">[图片占位]</span></div>
+            <div class="card__meta">
+              <h3 class="card__title">[作品标题 3]</h3>
+              <span class="card__year">[2025]</span>
+            </div>
+            <p class="card__desc">[此处填写作品的简短描述，一到两行说明它是什么、你承担的角色。]</p>
+          </a>
+        </article>
+
+        <!-- 卡片 4 -->
+        <article class="card reveal">
+          <a href="#" aria-label="[作品标题 4]">
+            <div class="card__thumb"><span class="card__ph">[图片占位]</span></div>
+            <div class="card__meta">
+              <h3 class="card__title">[作品标题 4]</h3>
+              <span class="card__year">[2025]</span>
+            </div>
+            <p class="card__desc">[此处填写作品的简短描述，一到两行说明它是什么、你承担的角色。]</p>
+          </a>
+        </article>
+
+        <!-- 卡片 5 -->
+        <article class="card reveal reveal--d1">
+          <a href="#" aria-label="[作品标题 5]">
+            <div class="card__thumb"><span class="card__ph">[图片占位]</span></div>
+            <div class="card__meta">
+              <h3 class="card__title">[作品标题 5]</h3>
+              <span class="card__year">[2025]</span>
+            </div>
+            <p class="card__desc">[此处填写作品的简短描述，一到两行说明它是什么、你承担的角色。]</p>
+          </a>
+        </article>
+
+        <!-- 卡片 6 -->
+        <article class="card reveal reveal--d2">
+          <a href="#" aria-label="[作品标题 6]">
+            <div class="card__thumb"><span class="card__ph">[图片占位]</span></div>
+            <div class="card__meta">
+              <h3 class="card__title">[作品标题 6]</h3>
+              <span class="card__year">[2024]</span>
+            </div>
+            <p class="card__desc">[此处填写作品的简短描述，一到两行说明它是什么、你承担的角色。]</p>
+          </a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================
+       联系方式
+       ✏️【替换点】把 href 与 [ ] 内的文案替换为真实邮箱 / 主页地址。
+         · 邮箱：mailto:your@email.com
+         · 社交：填完整 URL，建议加 target="_blank" rel="noopener"
+         · 不需要的行直接删掉整个 <li> 即可
+       ======================================================= -->
+  <section class="section" id="contact" aria-labelledby="contactLabel">
+    <div class="wrap">
+      <h2 class="label reveal" id="contactLabel">03 &nbsp;—&nbsp; Contact</h2>
+
+      <ul class="contact__list reveal reveal--d1">
+        <li class="contact__item">
+          <a class="contact__link" href="mailto:[your@email.com]">
+            <span class="contact__key">Email</span>
+            <span class="contact__val">[your@email.com]</span>
+          </a>
+        </li>
+        <li class="contact__item">
+          <a class="contact__link" href="#" target="_blank" rel="noopener">
+            <span class="contact__key">GitHub</span>
+            <span class="contact__val">[github.com/你的用户名]</span>
+          </a>
+        </li>
+        <li class="contact__item">
+          <a class="contact__link" href="#" target="_blank" rel="noopener">
+            <span class="contact__key">Bilibili</span>
+            <span class="contact__val">[space.bilibili.com/你的ID]</span>
+          </a>
+        </li>
+        <li class="contact__item">
+          <a class="contact__link" href="#" target="_blank" rel="noopener">
+            <span class="contact__key">WeChat</span>
+            <span class="contact__val">[你的微信号]</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<!-- =========================================================
+     页脚
+     ✏️【替换点】版权年份与姓名
+     ========================================================= -->
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <span>© [2026] [你的姓名]. All rights reserved.</span>
+    <span>[可选：Built by hand]</span>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   交互脚本（原生 JS，无任何依赖）
+   共三块：滚动出场动画 / 导航当前项高亮 / 移动端菜单
+   ============================================================ */
+(function () {
+  'use strict';
+
+  /* ---------- 1. 滚动出场动画 ---------- */
+  // 用 IntersectionObserver 监听带 .reveal 的元素，进入视口时加 .is-in 触发淡入
+  var revealEls = document.querySelectorAll('.reveal');
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);   // 只播一次，播完取消监听
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    // 老浏览器兜底：直接全部显示，保证内容可见
+    revealEls.forEach(function (el) { el.classList.add('is-in'); });
+  }
+
+
+  /* ---------- 2. 导航当前版块高亮 + 吸顶边框 ---------- */
+  var nav        = document.getElementById('nav');
+  var navAnchors = document.querySelectorAll('.nav__links a[href^="#"]');
+  var sections   = [];
+
+  // 收集导航指向的各个版块，供后续比对位置
+  navAnchors.forEach(function (a) {
+    var sec = document.querySelector(a.getAttribute('href'));
+    if (sec) sections.push({ link: a, el: sec });
+  });
+
+  function onScroll() {
+    // 2a. 滚动超过 10px 后给导航加下边框，视觉上区分「已离开顶部」
+    nav.classList.toggle('is-scrolled', window.pageYOffset > 10);
+
+    // 2b. 找出当前视口中「已经滚过顶部三分之一」的最后一个版块，高亮它
+    var mark = window.pageYOffset + window.innerHeight * 0.33;
+    var current = null;
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].el.offsetTop <= mark) current = sections[i];
+    }
+    navAnchors.forEach(function (a) { a.classList.remove('is-active'); });
+    if (current) current.link.classList.add('is-active');
+  }
+
+  // 用 rAF 节流，避免滚动时高频重排
+  var ticking = false;
+  window.addEventListener('scroll', function () {
+    if (!ticking) {
+      window.requestAnimationFrame(function () {
+        onScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  onScroll();   // 页面加载时先跑一次，处理带 #hash 直接进入的情况
+
+
+  /* ---------- 3. 移动端汉堡菜单 ---------- */
+  var toggle   = document.getElementById('navToggle');
+  var navLinks = document.getElementById('navLinks');
+
+  function closeMenu() {
+    navLinks.classList.remove('is-open');
+    toggle.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
+  toggle.addEventListener('click', function () {
+    var open = navLinks.classList.toggle('is-open');
+    toggle.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  // 点击任一链接后自动收起菜单
+  navLinks.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') closeMenu();
+  });
+
+  // 视口放大回桌面尺寸时，复位移动端菜单状态
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 640) closeMenu();
+  });
+})();
+</script>
+
 </body>
 </html>
