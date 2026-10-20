@@ -2,757 +2,639 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>[你的姓名] — Personal Homepage</title>
-<!--
-  ============================================================
-  使用说明（交付后请按注释逐项替换）
-  ------------------------------------------------------------
-  全文搜索「✏️【替换点】」即可定位所有需要你自行填写的位置。
-  所有方括号包裹的文案（如 [你的姓名]）均为占位符，请直接替换。
-  本文件零依赖：无外部 CSS / JS / 字体 / 图片，双击即可在浏览器打开。
-  ============================================================
--->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>笑傲江湖 · 林平之命运抉择</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
 <style>
-/* ==========================================================
-   1. 设计变量（改这里就能整体换色）
-   ========================================================== */
-:root{
-  --ink:      #111111;   /* 主文字 / 深色底 */
-  --paper:    #ffffff;   /* 主背景 / 浅色底 */
-  --muted:    #8a8a8a;   /* 次要文字、占位符 */
-  --line:     #e4e4e4;   /* 细线条分隔 */
-  --block:    #f2f2f2;   /* 作品图占位块底色 */
-  --hover:    #ededed;   /* 悬停时的占位块底色 */
-
-  --pad:      32px;      /* 页面左右安全边距 */
-  --max:      1120px;    /* 内容最大宽度 */
-  --ease:     cubic-bezier(.22,.61,.36,1);  /* 统一过渡曲线 */
-}
-
-/* ==========================================================
-   2. 基础重置
-   ========================================================== */
-*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
-
-html{
-  /* 平滑滚动：点击导航锚点时缓动到目标版块 */
-  scroll-behavior:smooth;
-  /* 顶部导航是吸顶的，锚点跳转时预留出导航高度，避免标题被遮挡 */
-  scroll-padding-top:96px;
-  -webkit-text-size-adjust:100%;
-}
-
-body{
-  background:var(--paper);
-  color:var(--ink);
-  /* 无衬线字体栈：全部使用系统自带字体，不加载任何外部字体 */
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",
-              Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  font-size:16px;
-  line-height:1.75;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-}
-
-a{ color:inherit; text-decoration:none; }
-img{ max-width:100%; display:block; }
-
-/* 统一键盘焦点样式（无障碍） */
-:focus-visible{ outline:2px solid var(--ink); outline-offset:4px; }
-
-/* ==========================================================
-   3. 通用布局
-   ========================================================== */
-.wrap{
-  width:100%;
-  max-width:var(--max);
-  margin:0 auto;
-  padding:0 var(--pad);
-}
-
-/* 版块：大量留白是这套版式的核心，纵向间距给得比常规更宽 */
-.section{ padding:120px 0; }
-.section + .section{ padding-top:0; }
-
-/* 版块小标题：编号 + 全大写英文标签 */
-.label{
-  display:flex;
-  align-items:center;
-  gap:14px;
-  font-size:11px;
-  letter-spacing:.22em;
-  text-transform:uppercase;
-  color:var(--muted);
-  margin-bottom:56px;
-}
-.label::after{
-  /* 标题右侧延伸出的一条细线，填充剩余空间 */
-  content:"";
-  flex:1;
-  height:1px;
-  background:var(--line);
-}
-
-/* ==========================================================
-   4. 顶部导航
-   ========================================================== */
-.nav{
-  position:sticky;   /* 吸顶 */
-  top:0;
-  z-index:100;
-  background:rgba(255,255,255,.86);
-  backdrop-filter:saturate(180%) blur(12px);   /* 毛玻璃，不支持的浏览器自动忽略 */
-  -webkit-backdrop-filter:saturate(180%) blur(12px);
-  border-bottom:1px solid transparent;
-  transition:border-color .3s var(--ease), background .3s var(--ease);
-}
-.nav.is-scrolled{ border-bottom-color:var(--line); }   /* 滚动后才显示下边框 */
-
-.nav__inner{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:24px;
-  height:76px;
-}
-
-/* ✏️【替换点】左上角的姓名 logo */
-.nav__name{
-  font-size:14px;
-  font-weight:600;
-  letter-spacing:.28em;      /* 加大字距 */
-  text-transform:uppercase;
-  white-space:nowrap;
-  transition:opacity .25s var(--ease);
-}
-.nav__name:hover{ opacity:.55; }
-
-.nav__links{
-  display:flex;
-  align-items:center;
-  gap:34px;
-  list-style:none;
-}
-.nav__links a{
-  position:relative;
-  font-size:11px;
-  font-weight:500;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-  color:var(--muted);
-  padding:6px 0;
-  transition:color .25s var(--ease);
-}
-/* 悬停 / 当前版块：文字变黑，并长出一条下划线 */
-.nav__links a::after{
-  content:"";
-  position:absolute;
-  left:0; bottom:0;
-  width:100%; height:1px;
-  background:var(--ink);
-  transform:scaleX(0);
-  transform-origin:left;
-  transition:transform .3s var(--ease);
-}
-.nav__links a:hover{ color:var(--ink); }
-.nav__links a:hover::after,
-.nav__links a.is-active::after{ transform:scaleX(1); }
-.nav__links a.is-active{ color:var(--ink); }
-
-/* 移动端汉堡按钮（桌面端隐藏） */
-.nav__toggle{
-  display:none;
-  width:32px; height:32px;
-  border:0; background:transparent;
-  cursor:pointer;
-  position:relative;
-  color:inherit;
-}
-.nav__toggle span{
-  position:absolute; left:4px; right:4px;
-  height:1px; background:var(--ink);
-  transition:transform .3s var(--ease), opacity .2s var(--ease);
-}
-.nav__toggle span:nth-child(1){ top:12px; }
-.nav__toggle span:nth-child(2){ bottom:12px; }
-.nav__toggle.is-open span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
-.nav__toggle.is-open span:nth-child(2){ transform:translateY(-6px) rotate(-45deg); }
-
-/* ==========================================================
-   5. 首屏 Hero
-   ========================================================== */
-.hero{
-  min-height:calc(100vh - 76px);   /* 减去导航高度，正好占满一屏 */
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding:80px 0 120px;
-}
-
-/* ✏️【替换点】首屏大字姓名 */
-.hero__name{
-  font-size:clamp(46px, 11vw, 132px);   /* 随视口平滑缩放 */
-  font-weight:600;
-  line-height:.98;
-  letter-spacing:.02em;
-  text-transform:uppercase;
-}
-
-/* ✏️【替换点】姓名下方的一行身份标签 */
-.hero__tag{
-  margin-top:32px;
-  font-size:13px;
-  letter-spacing:.26em;
-  text-transform:uppercase;
-  color:var(--muted);
-}
-
-.hero__scroll{
-  margin-top:96px;
-  font-size:11px;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-  color:var(--muted);
-  display:inline-flex;
-  align-items:center;
-  gap:12px;
-  align-self:flex-start;
-  transition:color .25s var(--ease);
-}
-.hero__scroll:hover{ color:var(--ink); }
-.hero__scroll::after{
-  content:"";
-  width:56px; height:1px;
-  background:var(--line);
-  transition:width .3s var(--ease), background .3s var(--ease);
-}
-.hero__scroll:hover::after{ width:80px; background:var(--ink); }
-
-/* ==========================================================
-   6. 自我介绍
-   ========================================================== */
-.about__text{
-  max-width:640px;          /* 控制每行字数，保证阅读节奏 */
-  font-size:19px;
-  line-height:1.9;
-  color:#2b2b2b;
-}
-
-/* ==========================================================
-   7. 作品集
-   ========================================================== */
-.work__grid{
-  display:grid;
-  /* 自适应网格：尽量多列，单列最小 300px，放不下就自动换行 */
-  grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
-  gap:64px 40px;
-}
-
-.card{ display:block; }
-
-/* 灰色占位图块：4:3 比例，中间用两条对角线暗示「此处放图」 */
-.card__thumb{
-  position:relative;
-  aspect-ratio:4 / 3;
-  background:var(--block);
-  overflow:hidden;
-  transition:background .35s var(--ease);
-}
-.card:hover .card__thumb{ background:var(--hover); }
-
-.card__thumb::before,
-.card__thumb::after{
-  content:"";
-  position:absolute; top:0; left:0;
-  width:100%; height:100%;
-  background-image:linear-gradient(to bottom right,
-      transparent calc(50% - .5px), var(--line) 50%, transparent calc(50% + .5px));
-  transition:transform .5s var(--ease), opacity .35s var(--ease);
-}
-.card__thumb::before{ background-image:linear-gradient(to bottom left,
-      transparent calc(50% - .5px), var(--line) 50%, transparent calc(50% + .5px)); }
-.card:hover .card__thumb::before{ transform:scale(1.04); opacity:.6; }
-.card:hover .card__thumb::after{ transform:scale(1.04); opacity:.6; }
-
-/* 占位图块上的文字提示 */
-.card__ph{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:11px;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-  color:var(--muted);
-  transition:opacity .35s var(--ease);
-}
-
-.card__meta{
-  display:flex;
-  align-items:baseline;
-  justify-content:space-between;
-  gap:16px;
-  margin-top:22px;
-}
-/* ✏️【替换点】作品标题 */
-.card__title{
-  font-size:17px;
-  font-weight:600;
-  letter-spacing:.01em;
-}
-/* ✏️【替换点】作品年份 / 类别（可选，不需要就删掉这个元素） */
-.card__year{
-  font-size:11px;
-  letter-spacing:.16em;
-  color:var(--muted);
-  white-space:nowrap;
-}
-/* ✏️【替换点】作品简短描述 */
-.card__desc{
-  margin-top:10px;
-  font-size:14px;
-  line-height:1.7;
-  color:var(--muted);
-  transition:color .25s var(--ease);
-}
-.card:hover .card__desc{ color:#444; }
-
-/* ==========================================================
-   8. 联系方式
-   ========================================================== */
-.contact__list{
-  list-style:none;
-  border-top:1px solid var(--line);
-  max-width:720px;
-}
-.contact__item{ border-bottom:1px solid var(--line); }
-
-/* 每行：左侧标签 + 右侧值，悬停时整行右移一点点 */
-.contact__link{
-  display:flex;
-  align-items:baseline;
-  justify-content:space-between;
-  gap:24px;
-  padding:26px 0;
-  transition:padding .35s var(--ease);
-}
-.contact__link:hover{ padding-left:14px; }
-
-.contact__key{
-  font-size:11px;
-  letter-spacing:.2em;
-  text-transform:uppercase;
-  color:var(--muted);
-  flex-shrink:0;
-}
-.contact__val{
-  font-size:16px;
-  text-align:right;
-  word-break:break-word;      /* 邮箱过长时在移动端自动断行 */
-}
-.contact__link:hover .contact__val{ text-decoration:underline; text-underline-offset:5px; }
-
-/* ==========================================================
-   9. 页脚
-   ========================================================== */
-.footer{
-  border-top:1px solid var(--line);
-  padding:40px 0 56px;
-}
-.footer__inner{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-  font-size:11px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:var(--muted);
-}
-
-/* ==========================================================
-   10. 出场动画（滚动进入视口时淡入上移）
-   ========================================================== */
-.reveal{
-  opacity:0;
-  transform:translateY(20px);
-  transition:opacity .7s var(--ease), transform .7s var(--ease);
-}
-.reveal.is-in{ opacity:1; transform:none; }
-/* 依次延迟出现，营造节奏感 */
-.reveal--d1{ transition-delay:.08s; }
-.reveal--d2{ transition-delay:.16s; }
-.reveal--d3{ transition-delay:.24s; }
-
-/* 用户在系统中开启了「减少动态效果」时，关掉所有过渡与动画 */
-@media (prefers-reduced-motion: reduce){
-  html{ scroll-behavior:auto; }
-  *,*::before,*::after{ transition-duration:.01ms !important; animation-duration:.01ms !important; }
-  .reveal{ opacity:1; transform:none; }
-}
-
-/* ==========================================================
-   11. 响应式：平板
-   ========================================================== */
-@media (max-width:860px){
-  :root{ --pad:24px; }
-  .section{ padding:96px 0; }
-  .hero{ min-height:auto; padding:56px 0 80px; }
-  .work__grid{ gap:52px 28px; }
-  .about__text{ font-size:17px; }
-}
-
-/* ==========================================================
-   12. 响应式：手机（单列堆叠）
-   ========================================================== */
-@media (max-width:640px){
-  :root{ --pad:20px; }
-
-  .nav__inner{ height:64px; }
-
-  /* 导航收成汉堡菜单 */
-  .nav__toggle{ display:block; }
-  .nav__links{
-    /* 默认隐藏；展开时以整块下拉形式铺满宽度 */
-    position:absolute;
-    top:64px; left:0; right:0;
-    flex-direction:column;
-    align-items:flex-start;
-    gap:0;
-    background:var(--paper);
-    border-bottom:1px solid var(--line);
-    padding:0 var(--pad);
-    max-height:0;
-    overflow:hidden;
-    transition:max-height .4s var(--ease);
+  :root{
+    --paper:#efe6d2;
+    --paper-2:#e6d9bd;
+    --ink:#2b2620;
+    --ink-soft:#4a4234;
+    --seal:#9e2b25;
+    --gold:#b8893b;
+    --blue:#3f6f7a;
+    --pink:#a8556a;
+    --green:#5a7d4f;
+    --line:#8a7a58;
+    --shadow:rgba(43,38,32,.25);
   }
-  .nav__links.is-open{ max-height:340px; }
-  .nav__links li{ width:100%; }
-  .nav__links a{
-    display:block;
-    width:100%;
-    padding:18px 0;
-    border-bottom:1px solid var(--line);
-    font-size:12px;
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:"ZCOOL XiaoWei","KaiTi","STKaiti","楷体",serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at 20% 15%, rgba(120,95,55,.10), transparent 45%),
+      radial-gradient(circle at 80% 85%, rgba(120,95,55,.12), transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(160,130,80,.06), transparent 70%),
+      linear-gradient(135deg,#d9c8a4 0%,#e8dcc0 40%,#ddd0b0 100%);
+    background-attachment:fixed;
+    min-height:100vh;
+    line-height:1.9;
   }
-  .nav__links li:last-child a{ border-bottom:0; }
-  .nav__links a::after{ display:none; }   /* 移动端不需要下划线动效 */
+  /* paper grain overlay */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(120,95,55,.025) 0 2px, transparent 2px 4px),
+      repeating-linear-gradient(90deg, rgba(120,95,55,.02) 0 3px, transparent 3px 6px);
+    mix-blend-mode:multiply;opacity:.6;
+  }
+  .wrap{
+    position:relative;z-index:1;
+    max-width:880px;margin:0 auto;padding:28px 18px 60px;
+  }
+  /* scroll / frame */
+  .scroll{
+    position:relative;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(255,250,235,.5), transparent 40%),
+      linear-gradient(180deg,#f3ecd9,#e9ddc2);
+    border:3px double var(--line);
+    box-shadow:0 10px 40px var(--shadow), inset 0 0 60px rgba(150,120,70,.18);
+    padding:34px 30px 40px;
+    border-radius:4px;
+  }
+  .scroll::before,.scroll::after{
+    content:"";position:absolute;left:-10px;right:-10px;height:14px;
+    background:linear-gradient(180deg,#7a6336,#5d4a26);
+    border-radius:8px;box-shadow:0 4px 10px var(--shadow);
+  }
+  .scroll::before{top:-17px;}
+  .scroll::after{bottom:-17px;}
 
-  .section{ padding:72px 0; }
-  .label{ margin-bottom:36px; }
+  /* corner brackets */
+  .corner{position:absolute;width:26px;height:26px;border:2px solid var(--seal);opacity:.55;}
+  .c-tl{top:8px;left:8px;border-right:none;border-bottom:none;}
+  .c-tr{top:8px;right:8px;border-left:none;border-bottom:none;}
+  .c-bl{bottom:8px;left:8px;border-right:none;border-top:none;}
+  .c-br{bottom:8px;right:8px;border-left:none;border-top:none;}
 
-  /* 作品卡片在手机上强制单列 */
-  .work__grid{ grid-template-columns:1fr; gap:44px; }
+  h1.title{
+    font-family:"Ma Shan Zheng","STXingkai","华文行楷",cursive;
+    text-align:center;font-size:42px;letter-spacing:6px;margin:.1em 0 .1em;
+    color:var(--ink);text-shadow:1px 2px 0 rgba(158,43,37,.18);
+  }
+  .subtitle{text-align:center;color:var(--ink-soft);font-size:17px;letter-spacing:3px;margin-bottom:6px;}
+  .chapter-tag{
+    display:inline-block;font-family:"Ma Shan Zheng",cursive;
+    color:var(--seal);border:1px solid var(--seal);border-radius:3px;
+    padding:1px 12px;font-size:16px;letter-spacing:2px;margin-bottom:14px;
+  }
+  .rule{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:14px 0;}
 
-  .contact__link{ flex-direction:column; align-items:flex-start; gap:6px; padding:20px 0; }
-  .contact__val{ text-align:left; }
+  /* narrative */
+  .scene{
+    font-size:18.5px;color:var(--ink-soft);min-height:120px;
+    animation:fade .7s ease;
+  }
+  .scene p{margin:.4em 0;text-indent:2em;}
+  .scene .em{color:var(--seal);font-weight:bold;}
+  .scene .ink-em{color:var(--blue);font-weight:bold;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 
-  .footer__inner{ flex-direction:column; align-items:flex-start; }
-}
+  /* stats */
+  .stats{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 18px;
+    margin:18px 0 6px;padding:14px 16px;background:rgba(255,250,238,.45);
+    border:1px solid var(--line);border-radius:4px;
+  }
+  .stat{font-size:15px;}
+  .stat .lab{display:flex;justify-content:space-between;margin-bottom:3px;}
+  .stat .lab b{font-weight:normal;}
+  .stat .lab .val{font-family:"Ma Shan Zheng",cursive;font-size:15px;}
+  .bar{height:9px;background:rgba(120,95,55,.18);border-radius:6px;overflow:hidden;border:1px solid rgba(120,95,55,.3);}
+  .bar > i{display:block;height:100%;border-radius:6px;transition:width .6s ease;}
+  .b-wuxia i{background:linear-gradient(90deg,#c79a4a,#b8893b);}
+  .b-hatred i{background:linear-gradient(90deg,#c0392b,#9e2b25);}
+  .b-sanity i{background:linear-gradient(90deg,#5b97a3,#3f6f7a);}
+  .b-shan i{background:linear-gradient(90deg,#c06b80,#a8556a);}
+  .b-chong i{background:linear-gradient(90deg,#7a9c6b,#5a7d4f);}
+
+  /* choices */
+  .choices{margin-top:20px;display:flex;flex-direction:column;gap:12px;}
+  .choice{
+    font-family:inherit;font-size:17px;color:var(--ink);text-align:left;
+    background:linear-gradient(180deg,#f6efdd,#e7d9ba);
+    border:1px solid var(--line);border-left:5px solid var(--seal);
+    padding:12px 16px;border-radius:3px;cursor:pointer;
+    transition:all .2s ease;box-shadow:0 2px 6px rgba(43,38,32,.12);
+    position:relative;
+  }
+  .choice:hover{background:linear-gradient(180deg,#fff7e6,#efdfbe);transform:translateX(4px);box-shadow:0 4px 12px rgba(43,38,32,.2);}
+  .choice .eff{display:block;font-size:13px;color:var(--ink-soft);margin-top:5px;opacity:.85;}
+  .choice .num{font-family:"Ma Shan Zheng",cursive;color:var(--seal);margin-right:8px;}
+
+  /* seal */
+  .seal{
+    position:absolute;top:18px;right:24px;width:54px;height:54px;
+    border:2px solid var(--seal);border-radius:6px;color:var(--seal);
+    font-family:"Ma Shan Zheng",cursive;font-size:30px;line-height:54px;text-align:center;
+    transform:rotate(-6deg);opacity:.8;box-shadow:inset 0 0 0 2px rgba(158,43,37,.25);
+  }
+
+  /* buttons */
+  .btn{
+    font-family:"Ma Shan Zheng",cursive;letter-spacing:3px;font-size:20px;
+    color:#f3ecd9;background:linear-gradient(180deg,#a8362f,#8a241f);
+    border:1px solid #6e1c18;padding:10px 30px;border-radius:4px;cursor:pointer;
+    box-shadow:0 4px 12px rgba(120,30,25,.35);transition:all .2s;
+  }
+  .btn:hover{background:linear-gradient(180deg,#bb423a,#9a2a24);transform:translateY(-2px);}
+  .center{text-align:center;margin-top:24px;}
+
+  /* title screen */
+  .cover{text-align:center;padding:30px 10px;}
+  .cover .big{font-family:"Ma Shan Zheng",cursive;font-size:64px;letter-spacing:10px;color:var(--ink);text-shadow:2px 3px 0 rgba(158,43,37,.2);}
+  .cover .poem{font-size:18px;color:var(--ink-soft);margin:14px auto;max-width:560px;line-height:2.1;}
+  .cover .tag{color:var(--seal);letter-spacing:4px;}
+
+  /* ending */
+  .ending{animation:fade .9s ease;}
+  .ending h2{font-family:"Ma Shan Zheng",cursive;font-size:34px;color:var(--seal);text-align:center;letter-spacing:4px;}
+  .ending .tier{text-align:center;font-size:16px;color:var(--ink-soft);margin-bottom:10px;letter-spacing:2px;}
+  .ending .body{font-size:18px;color:var(--ink-soft);}
+  .ending .body p{text-indent:2em;margin:.5em 0;}
+  .ending .verdict{margin-top:14px;padding:12px 16px;border:1px dashed var(--seal);border-radius:4px;background:rgba(158,43,37,.06);font-size:15.5px;}
+
+  .footnote{text-align:center;color:var(--ink-soft);font-size:13px;margin-top:18px;opacity:.7;}
+  @media(max-width:560px){
+    h1.title{font-size:32px;}
+    .cover .big{font-size:46px;}
+    .scene{font-size:17px;}
+  }
 </style>
 </head>
-
 <body>
-
-<!-- =========================================================
-     顶部导航
-     ✏️【替换点】导航右侧的锚点链接文案（About / Work / Contact）
-     ✏️【替换点】如需增删版块，同步修改这里的 href="#xxx" 与对应版块的 id
-     ========================================================= -->
-<header class="nav" id="nav">
-  <div class="wrap nav__inner">
-    <!-- ✏️【替换点】左上角姓名 -->
-    <a class="nav__name" href="#top">[你的姓名]</a>
-
-    <nav>
-      <ul class="nav__links" id="navLinks">
-        <li><a href="#about">About</a></li>
-        <li><a href="#work">Work</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-
-    <!-- 移动端汉堡按钮 -->
-    <button class="nav__toggle" id="navToggle" aria-label="展开导航菜单" aria-expanded="false" aria-controls="navLinks">
-      <span></span><span></span>
-    </button>
+<div class="wrap">
+  <div class="scroll">
+    <span class="corner c-tl"></span><span class="corner c-tr"></span>
+    <span class="corner c-bl"></span><span class="corner c-br"></span>
+    <div class="seal">林</div>
+    <div id="app"></div>
   </div>
-</header>
-
-<main id="top">
-
-  <!-- =======================================================
-       首屏
-       ======================================================= -->
-  <section class="hero" aria-labelledby="heroName">
-    <div class="wrap">
-      <!-- ✏️【替换点】首屏大字姓名（建议与导航保持一致） -->
-      <h1 class="hero__name reveal" id="heroName">[你的姓名]</h1>
-
-      <!-- ✏️【替换点】一行身份标签，例：Designer / Developer / Based in Shanghai -->
-      <p class="hero__tag reveal reveal--d1">[此处填写身份标签，如职业 / 所在地]</p>
-
-      <a class="hero__scroll reveal reveal--d2" href="#about">往下浏览</a>
-    </div>
-  </section>
-
-  <!-- =======================================================
-       自我介绍
-       ======================================================= -->
-  <section class="section" id="about" aria-labelledby="aboutLabel">
-    <div class="wrap">
-      <h2 class="label reveal" id="aboutLabel">01 &nbsp;—&nbsp; About</h2>
-      <!-- ✏️【替换点】自我介绍正文，建议 2–4 句；可用 <br> 分段 -->
-      <p class="about__text reveal reveal--d1">
-        [此处填写自我介绍：你是谁、你在做什么、你关注或擅长的方向。保持一到三段，语气克制即可。]
-      </p>
-    </div>
-  </section>
-
-  <!-- =======================================================
-       作品集（6 张卡片）
-       替换方式：整段复制 <article class="card">...</article> 即可增删数量，
-       网格会自动排列，无需改 CSS。
-       图块换成真图时：把 <div class="card__thumb">...</div>
-       替换为 <div class="card__thumb"><img src="..." alt="..."></div>
-       ======================================================= -->
-  <section class="section" id="work" aria-labelledby="workLabel">
-    <div class="wrap">
-      <h2 class="label reveal" id="workLabel">02 &nbsp;—&nbsp; Selected Work</h2>
-
-      <div class="work__grid">
-
-        <!-- 卡片 1 -->
-        <article class="card reveal">
-          <a href="#" aria-label="[作品标题 1]">
-            <div class="card__thumb"><span class="card__ph">[图片占位]</span></div>
-            <div class="card__meta">
-              <!-- ✏️【替换点】作品标题 -->
-              <h3 class="card__title">[作品标题 1]</h3>
-              <!-- ✏️【替换点】年份 / 类别 -->
-              <span class="card__year">[2026]</span>
-            </div>
-            <!-- ✏️【替换点】一句话描述 -->
-            <p class="card__desc">[此处填写作品的简短描述，一到两行说明它是什么、你承担的角色。]</p>
-          </a>
-        </article>
-
-        <!-- 卡片 2 -->
-        <article class="card reveal reveal--d1">
-          <a href="#" aria-label="[作品标题 2]">
-            <div class="card__thumb"><span class="card__ph">[图片占位]</span></div>
-            <div class="card__meta">
-              <h3 class="card__title">[作品标题 2]</h3>
-              <span class="card__year">[2026]</span>
-            </div>
-            <p class="card__desc">[此处填写作品的简短描述，一到两行说明它是什么、你承担的角色。]</p>
-          </a>
-        </article>
-
-        <!-- 卡片 3 -->
-        <article class="card reveal reveal--d2">
-          <a href="#" aria-label="[作品标题 3]">
-            <div class="card__thumb"><span class="card__ph">[图片占位]</span></div>
-            <div class="card__meta">
-              <h3 class="card__title">[作品标题 3]</h3>
-              <span class="card__year">[2025]</span>
-            </div>
-            <p class="card__desc">[此处填写作品的简短描述，一到两行说明它是什么、你承担的角色。]</p>
-          </a>
-        </article>
-
-        <!-- 卡片 4 -->
-        <article class="card reveal">
-          <a href="#" aria-label="[作品标题 4]">
-            <div class="card__thumb"><span class="card__ph">[图片占位]</span></div>
-            <div class="card__meta">
-              <h3 class="card__title">[作品标题 4]</h3>
-              <span class="card__year">[2025]</span>
-            </div>
-            <p class="card__desc">[此处填写作品的简短描述，一到两行说明它是什么、你承担的角色。]</p>
-          </a>
-        </article>
-
-        <!-- 卡片 5 -->
-        <article class="card reveal reveal--d1">
-          <a href="#" aria-label="[作品标题 5]">
-            <div class="card__thumb"><span class="card__ph">[图片占位]</span></div>
-            <div class="card__meta">
-              <h3 class="card__title">[作品标题 5]</h3>
-              <span class="card__year">[2025]</span>
-            </div>
-            <p class="card__desc">[此处填写作品的简短描述，一到两行说明它是什么、你承担的角色。]</p>
-          </a>
-        </article>
-
-        <!-- 卡片 6 -->
-        <article class="card reveal reveal--d2">
-          <a href="#" aria-label="[作品标题 6]">
-            <div class="card__thumb"><span class="card__ph">[图片占位]</span></div>
-            <div class="card__meta">
-              <h3 class="card__title">[作品标题 6]</h3>
-              <span class="card__year">[2024]</span>
-            </div>
-            <p class="card__desc">[此处填写作品的简短描述，一到两行说明它是什么、你承担的角色。]</p>
-          </a>
-        </article>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- =======================================================
-       联系方式
-       ✏️【替换点】把 href 与 [ ] 内的文案替换为真实邮箱 / 主页地址。
-         · 邮箱：mailto:your@email.com
-         · 社交：填完整 URL，建议加 target="_blank" rel="noopener"
-         · 不需要的行直接删掉整个 <li> 即可
-       ======================================================= -->
-  <section class="section" id="contact" aria-labelledby="contactLabel">
-    <div class="wrap">
-      <h2 class="label reveal" id="contactLabel">03 &nbsp;—&nbsp; Contact</h2>
-
-      <ul class="contact__list reveal reveal--d1">
-        <li class="contact__item">
-          <a class="contact__link" href="mailto:[your@email.com]">
-            <span class="contact__key">Email</span>
-            <span class="contact__val">[your@email.com]</span>
-          </a>
-        </li>
-        <li class="contact__item">
-          <a class="contact__link" href="#" target="_blank" rel="noopener">
-            <span class="contact__key">GitHub</span>
-            <span class="contact__val">[github.com/你的用户名]</span>
-          </a>
-        </li>
-        <li class="contact__item">
-          <a class="contact__link" href="#" target="_blank" rel="noopener">
-            <span class="contact__key">Bilibili</span>
-            <span class="contact__val">[space.bilibili.com/你的ID]</span>
-          </a>
-        </li>
-        <li class="contact__item">
-          <a class="contact__link" href="#" target="_blank" rel="noopener">
-            <span class="contact__key">WeChat</span>
-            <span class="contact__val">[你的微信号]</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-</main>
-
-<!-- =========================================================
-     页脚
-     ✏️【替换点】版权年份与姓名
-     ========================================================= -->
-<footer class="footer">
-  <div class="wrap footer__inner">
-    <span>© [2026] [你的姓名]. All rights reserved.</span>
-    <span>[可选：Built by hand]</span>
-  </div>
-</footer>
+  <div class="footnote">本游戏为基于金庸《笑傲江湖》之同人改编创作，仅供娱乐与命运思辨。</div>
+</div>
 
 <script>
-/* ============================================================
-   交互脚本（原生 JS，无任何依赖）
-   共三块：滚动出场动画 / 导航当前项高亮 / 移动端菜单
-   ============================================================ */
-(function () {
-  'use strict';
+/* ===================== 状态模型 ===================== */
+function initState(){
+  return {
+    wuxia:5,        // 武功
+    hatred:15,      // 仇恨
+    sanity:85,      // 理智（越高越清醒）
+    lingShan:0,     // 岳灵珊好感
+    huChong:0,      // 令狐冲好感
+    parentsAlive:false,
+    selfCastrated:false,
+    blinded:false,
+    killedShan:false,
+    revengeDone:false,
+    escaped:false,
+    betrayedZuo:false,
+    burnedJianpu:false,
+    knowsYueEvil:false,
+    toldHuChong:false,
+    hidden:false,
+    chapter:""
+  };
+}
+let state = initState();
 
-  /* ---------- 1. 滚动出场动画 ---------- */
-  // 用 IntersectionObserver 监听带 .reveal 的元素，进入视口时加 .is-in 触发淡入
-  var revealEls = document.querySelectorAll('.reveal');
+const STAT_META = [
+  {key:"wuxia",  name:"武功",  cls:"b-wuxia",  max:100},
+  {key:"hatred", name:"仇恨",  cls:"b-hatred", max:100},
+  {key:"sanity", name:"理智",  cls:"b-sanity", max:100},
+  {key:"lingShan",name:"灵珊情",cls:"b-shan",  max:100},
+  {key:"huChong",name:"冲哥义",cls:"b-chong", max:100},
+];
 
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-in');
-          io.unobserve(entry.target);   // 只播一次，播完取消监听
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-
-    revealEls.forEach(function (el) { io.observe(el); });
-  } else {
-    // 老浏览器兜底：直接全部显示，保证内容可见
-    revealEls.forEach(function (el) { el.classList.add('is-in'); });
+/* ===================== 工具 ===================== */
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+function applyEffect(eff){
+  if(!eff) return;
+  for(const k in eff){
+    if(k==="flag"){ for(const f in eff.flag) state[f]=eff.flag[f]; continue; }
+    if(state.hasOwnProperty(k)) state[k]=clamp(state[k]+eff[k],0,100);
   }
-
-
-  /* ---------- 2. 导航当前版块高亮 + 吸顶边框 ---------- */
-  var nav        = document.getElementById('nav');
-  var navAnchors = document.querySelectorAll('.nav__links a[href^="#"]');
-  var sections   = [];
-
-  // 收集导航指向的各个版块，供后续比对位置
-  navAnchors.forEach(function (a) {
-    var sec = document.querySelector(a.getAttribute('href'));
-    if (sec) sections.push({ link: a, el: sec });
-  });
-
-  function onScroll() {
-    // 2a. 滚动超过 10px 后给导航加下边框，视觉上区分「已离开顶部」
-    nav.classList.toggle('is-scrolled', window.pageYOffset > 10);
-
-    // 2b. 找出当前视口中「已经滚过顶部三分之一」的最后一个版块，高亮它
-    var mark = window.pageYOffset + window.innerHeight * 0.33;
-    var current = null;
-    for (var i = 0; i < sections.length; i++) {
-      if (sections[i].el.offsetTop <= mark) current = sections[i];
-    }
-    navAnchors.forEach(function (a) { a.classList.remove('is-active'); });
-    if (current) current.link.classList.add('is-active');
+}
+function reqMet(req){
+  if(!req) return true;
+  if(req.stat){
+    for(const k in req.stat){ if((state[k]||0) < req.stat[k]) return false; }
   }
-
-  // 用 rAF 节流，避免滚动时高频重排
-  var ticking = false;
-  window.addEventListener('scroll', function () {
-    if (!ticking) {
-      window.requestAnimationFrame(function () {
-        onScroll();
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
-
-  onScroll();   // 页面加载时先跑一次，处理带 #hash 直接进入的情况
-
-
-  /* ---------- 3. 移动端汉堡菜单 ---------- */
-  var toggle   = document.getElementById('navToggle');
-  var navLinks = document.getElementById('navLinks');
-
-  function closeMenu() {
-    navLinks.classList.remove('is-open');
-    toggle.classList.remove('is-open');
-    toggle.setAttribute('aria-expanded', 'false');
+  if(req.flag){ for(const f in req.flag){ if(!!state[f] !== req.flag[f]) return false; } }
+  return true;
+}
+function effText(eff){
+  if(!eff) return "";
+  const map = {wuxia:"武功",hatred:"仇恨",sanity:"理智",lingShan:"灵珊情",huChong:"冲哥义"};
+  let parts=[];
+  for(const k in eff){
+    if(k==="flag") continue;
+    const d=eff[k];
+    if(d>0) parts.push(map[k]+" +"+d);
+    else if(d<0) parts.push(map[k]+" "+d);
   }
+  for(const f in (eff.flag||{})){
+    if(f==="burnedJianpu") parts.push("焚毁剑谱");
+    if(f==="knowsYueEvil") parts.push("识破岳不群");
+    if(f==="toldHuChong") parts.push("托付冲哥");
+    if(f==="hidden") parts.push("隐忍不发");
+    if(f==="blinded") parts.push("双目失明");
+    if(f==="revengeDone") parts.push("大仇得报");
+    if(f==="killedShan") parts.push("痛失灵珊");
+    if(f==="escaped") parts.push("携眷远走");
+    if(f==="betrayedZuo") parts.push("反噬其主");
+    if(f==="selfCastrated") parts.push("挥刀自宫");
+  }
+  return parts.join("，");
+}
 
-  toggle.addEventListener('click', function () {
-    var open = navLinks.classList.toggle('is-open');
-    toggle.classList.toggle('is-open', open);
-    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
+/* ===================== 剧情节点 ===================== */
+const story = {
+  n_intro:{
+    chapter:"楔子",
+    scene:[`福建福州，福威镖局。`,
+      `你是林平之，镖局少总镖头。家世殷实，相貌俊美，自幼娇养，武功平平却心性纯善。江湖传言，你家传一部<span class="em">《辟邪剑谱》</span>，引得多少双眼睛暗中觊觎。`,
+      `你只当那是祖宗留下的虚名，直到那一日的酒馆风波，将你拖入万劫不复的江湖。`,
+      `这一局棋，落子无悔。<span class="ink-em">你，想做个怎样的人？</span>`],
+    choices:[
+      {text:"鲜衣怒马，入局", eff:{}, next:"n_tavern"}
+    ]
+  },
 
-  // 点击任一链接后自动收起菜单
-  navLinks.addEventListener('click', function (e) {
-    if (e.target.tagName === 'A') closeMenu();
-  });
+  n_tavern:{
+    chapter:"第一幕 · 祸起福威",
+    scene:[`郊野小酒馆。一个面容丑陋的卖酒女子正被地痞调戏，哭喊挣扎。`,
+      `你认出其中一人是青城派弟子——你尚不知，他叫余人彦，是青城掌门余沧海的独子。`,
+      `酒意与血气上涌，你握紧了剑柄。`],
+    choices:[
+      {text:"拔剑挺身，救下那女子", eff:{hatred:10,sanity:-2}, note:"侠义之心，却也埋下祸根", next:"n_kill"},
+      {text:"佯作未见，悄然绕道离去", eff:{sanity:5,huChong:3}, note:"明哲保身，少一分牵连", next:"n_massacre"}
+    ]
+  },
 
-  // 视口放大回桌面尺寸时，复位移动端菜单状态
-  window.addEventListener('resize', function () {
-    if (window.innerWidth > 640) closeMenu();
+  n_kill:{
+    chapter:"第一幕 · 祸起福威",
+    scene:[`你出手了。争执之间，剑锋失控，余人彦倒在你的脚下，再无声息。`,
+      `你懵了。那女子揭开人皮面具——竟是华山派岳不群之女<span class="em">岳灵珊</span>易容。她匆匆离去，留下你一人面对尸体。`,
+      `你不知道，余沧海本就图谋剑谱，杀子之仇，只是他动手的借口。`],
+    choices:[
+      {text:"事已至此，听天由命", eff:{}, next:"n_massacre"}
+    ]
+  },
+
+  n_massacre:{
+    chapter:"第一幕 · 祸起福威",
+    scene:[`青城派倾巢而出，血洗福威镖局。你眼睁睁看着镖师们接连倒下，惨叫回荡在院落里。`,
+      `父母被余沧海掳走，你侥幸逃脱，却已无家可归。`,
+      `火光映红半边天，你站在废墟前，握紧双拳。`],
+    choices:[
+      {text:"持剑迎敌，与镖局共存亡", eff:{wuxia:10}, note:"以死明志，少总镖头的最后一战", next:"END:earlyDeath"},
+      {text:"拼死护住父母，掩护其突围", eff:{wuxia:15,hatred:15,flag:{parentsAlive:true}}, note:"护亲族，自身负伤", next:"n_beggar"},
+      {text:"为留有用之身，独自遁逃", eff:{hatred:25,sanity:-8}, note:"苟活，仇恨在心中生根", next:"n_beggar"}
+    ]
+  },
+
+  n_beggar:{
+    chapter:"第二幕 · 流亡乞儿",
+    scene:[`你易容成满身恶疮的乞丐，混迹市井。`,
+      `饥肠辘辘时，你偷了农家的几颗龙眼，被农妇拿棍棒追打，你咬牙不敢还手。`,
+      `这一顿打，打掉了你最后一点少爷脾气，也打醒了你对这弱肉强食江湖的认知。`],
+    choices:[
+      {text:"忍辱偷生，把屈辱咽进肚里", eff:{sanity:-5,hatred:10}, note:"心智被磨砺得冷硬", next:"n_mugaofeng"},
+      {text:"暂不低头，暗自记恨这世道", eff:{sanity:5,wuxia:5}, note:"保留一丝傲骨", next:"n_mugaofeng"}
+    ]
+  },
+
+  n_mugaofeng:{
+    chapter:"第二幕 · 流亡乞儿",
+    scene:[`流亡途中，你撞上了<span class="em">"塞北明驼"木高峰</span>。他同样觊觎剑谱，欲以武力逼你拜师。`,
+      `千钧一发，"君子剑"<span class="em">岳不群</span>如天降神明，惊退木高峰，大义凛然地将你收入华山门下。`,
+      `你感激涕零，视他为人间灯塔——却不知，这座灯塔，正引你驶向深渊。`],
+    choices:[
+      {text:"拜入华山，奉岳不群为恩师", eff:{huChong:5}, next:"n_parents"}
+    ]
+  },
+
+  n_parents:{
+    chapter:"第二幕 · 流亡乞儿",
+    scene:[`噩耗传来：父母在衡山城外被木高峰折磨致死。`,
+      `弥留之际，父亲托大师兄<span class="em">令狐冲</span>转告你遗言："福州向阳巷老宅，祖宗遗物，不可翻看。"`,
+      `你彻底成了孤儿。华山，成了你唯一的依靠。`],
+    choices:[
+      {text:"悲恸欲绝，立誓血债血偿", eff:{hatred:20,sanity:-10,huChong:5}, note:"仇恨如野火", next:"n_huashan"},
+      {text:"强忍悲痛，暗中将仇记在心", eff:{sanity:10,hatred:10,huChong:5}, note:"藏锋于鞘", next:"n_huashan"},
+      {text:"叩谢大师兄传信之恩义", eff:{huChong:15,sanity:5}, note:"结下手足之情", next:"n_huashan"}
+    ]
+  },
+
+  n_huashan:{
+    chapter:"第三幕 · 华山岁月",
+    scene:[`华山岁月静好。你练功刻苦，俊朗勤勉，打动了青梅竹马的小师妹<span class="em">岳灵珊</span>。`,
+      `你们朝夕相处，情愫暗生，你尝到了久违的暖意——哪怕这暖意，也许本就是一场精心编织的网。`],
+    choices:[
+      {text:"苦练华山剑法，潜心向学", eff:{wuxia:20,sanity:5}, note:"根基渐稳", next:"n_oldhouse"},
+      {text:"暗中查探辟邪剑谱的下落", eff:{hatred:10,wuxia:5,flag:{knowsYueEvil:false}}, note:"心有疑虑", next:"n_oldhouse"},
+      {text:"与灵珊相伴，珍惜眼前温情", eff:{lingShan:20,sanity:5}, note:"情根深种", next:"n_oldhouse"}
+    ]
+  },
+
+  n_oldhouse:{
+    chapter:"第三幕 · 华山岁月",
+    scene:[`华山派行至福州。深夜，你潜回向阳巷老宅，在佛堂屋顶夹层里，翻出了写有剑谱的<span class="em">袈裟</span>。`,
+      `可你刚到手，一道寒光袭来——蒙面人夺谱、砍伤你，意欲灭口。你屏息装死，从指缝间，看清了那蒙面人的身形。`],
+    choices:[
+      {text:"装死窥破：那蒙面人竟是岳不群！", eff:{sanity:-15,hatred:20,flag:{knowsYueEvil:true}}, note:"信仰崩塌", next:"n_discover"},
+      {text:"奋起夺谱，与蒙面人殊死相拼", eff:{wuxia:10,sanity:-5,hatred:15}, note:"身负重伤，仍被夺走", next:"n_discover"},
+      {text:"不动声色，悄然隐去", eff:{sanity:5}, note:"不露声色", next:"n_discover"}
+    ]
+  },
+
+  n_discover:{
+    chapter:"第四幕 · 剑谱迷局",
+    scene:[ ()=> state.knowsYueEvil
+        ? `你终于明白：岳不群收你为徒、促成你与灵珊的婚事，从头到尾，都是为了图谋剑谱。所谓"君子剑"，是最阴险的伪君子。`
+        : `剑谱被夺，你心下疑窦丛生。岳不群的笑容，似乎不再那么可信。`,
+      `你站在师门与真相的裂缝之间，必须抉择。`],
+    choices:[
+      {text:"继续隐忍，假意屈从于岳不群", eff:{sanity:-5,hatred:10,flag:{hidden:true}}, note:"扮猪吃虎", next:"n_jianpu"},
+      {text:"当众揭穿这伪君子的真面目", eff:{sanity:-10,hatred:15,huChong:5}, note:"风险极大，或遭灭口", next:"n_jianpu"},
+      {text:"私下告知大师兄令狐冲", eff:{huChong:20,sanity:5,flag:{toldHuChong:true}}, note:"结为同盟", next:"n_jianpu"}
+    ]
+  },
+
+  n_jianpu:{
+    chapter:"第四幕 · 剑谱迷局",
+    scene:[`岳不群为掩人耳目，将写有剑谱的袈裟抛出窗外。你暗中寻回，抖开一看，开篇八个大字如惊雷炸响：`,
+      `<span class="em">"欲练此功，必先自宫。"</span>`,
+      `自宫，方可练成辟邪剑法；不练，则随时可能被岳不群、余沧海灭口。你攥紧袈裟，手心沁血。`],
+    choices:[
+      {text:"挥刀自宫，修炼辟邪剑法", eff:{wuxia:40,sanity:-20,hatred:20,lingShan:-10,flag:{selfCastrated:true}}, note:"以身为祭，换倾世武功", next:"n_marriage"},
+      {text:"不练邪功，另寻正道破局", eff:{sanity:10,wuxia:5}, note:"守住做人之本", next:"n_marriage"},
+      {text:"焚毁剑谱，断绝这祸根", eff:{hatred:-20,sanity:10,flag:{burnedJianpu:true}}, note:"宁为玉碎", next:"n_marriage"}
+    ]
+  },
+
+  n_marriage:{
+    chapter:"第四幕 · 剑谱迷局",
+    scene:[`你与岳灵珊的婚事如期而至。红烛摇曳，她满心欢喜，浑然不知枕边人早已心如枯井，或胸怀鬼胎。`],
+    choices:[
+      {text:"待她如初，珍重这一份情", eff:{lingShan:15,sanity:5}, note:"柔情未泯", next:"n_revenge_prep"},
+      {text:"冷淡疏离，将她视作棋子", eff:{lingShan:-15,hatred:5,sanity:-5}, note:"心肠渐硬", next:"n_revenge_prep"}
+    ]
+  },
+
+  n_revenge_prep:{
+    chapter:"第五幕 · 抉择与复仇",
+    scene:[`嵩山并派大会落幕。你的武功已非吴下阿蒙，复仇的刀，握在了自己手里。`,
+      `余沧海逍遥法外，木高峰仍逞凶狂，岳不群的笑脸后藏着杀机。这一战，你等了太久。`],
+    choices:[
+      {text:"踏上封禅台，了结恩怨", eff:{}, next:"n_revenge"}
+    ]
+  },
+
+  n_revenge:{
+    chapter:"第五幕 · 抉择与复仇",
+    scene:[`封禅台下，你红衣如血，剑法诡谲。青城弟子在你剑下如雏鸡般溃散。`,
+      `余沧海、木高峰，这两个毁你满门的仇人，终于到了偿还之时。`],
+    choices:[
+      {text:"残忍虐杀，以牙还牙，刺瞎余沧海双眼", eff:{sanity:-15,hatred:15,flag:{revengeDone:true,blinded:true}}, note:"快感之后，是更深的空洞", next:"n_shan"},
+      {text:"痛快了断，恩怨两清", eff:{sanity:5,flag:{revengeDone:true}}, note:"侠者之风", next:"n_shan"},
+      {text:"剑谱已焚，功力未成，仇人未除", eff:{}, req:{flag:{burnedJianpu:true}}, note:"徒唤奈何", next:"n_shan"}
+    ]
+  },
+
+  n_shan:{
+    chapter:"第五幕 · 抉择与复仇",
+    scene:[`复仇之后，一直苦苦追随你的岳灵珊，依旧待你一片痴心。`,
+      `而左冷禅——那位同样被岳不群刺瞎的嵩山掌门，正向你伸出橄榄枝。`,
+      `面对灵珊，你握剑的手，微微发颤。`],
+    choices:[
+      {text:"为表忠心，挥剑刺向灵珊", eff:{sanity:-20,lingShan:-40,hatred:10,flag:{killedShan:true}}, note:"斩断温情，投向左冷禅", next:"n_zuo"},
+      {text:"护她周全，携她远走江湖", eff:{lingShan:10,sanity:10,flag:{escaped:true}}, note:"放下仇恨，与爱相守", next:"n_final"},
+      {text:"劝她离去，各自珍重", eff:{lingShan:-5,sanity:5}, note:"放手，是另一种成全", next:"n_final"}
+    ]
+  },
+
+  n_zuo:{
+    chapter:"第五幕 · 抉择与复仇",
+    scene:[`你随左冷禅来到华山思过崖漆黑山洞。盲人剑客聚于此，暗流涌动。`,
+      `左冷禅要你彻底斩断与岳不群的一切——包括那个深爱你的妻子。`,
+      `你，要做一个怎样的选择？`],
+    choices:[
+      {text:"甘为鹰犬，残害正派以表忠心", eff:{sanity:-10,wuxia:5}, note:"沉沦权力", next:"END:meizhuang"},
+      {text:"暗蓄势力，反噬其主左冷禅", eff:{wuxia:15,sanity:-5,flag:{betrayedZuo:true}}, note:"螳螂捕蝉", next:"END:demonLord"},
+      {text:"放任心魔，彻底疯魔癫狂", eff:{sanity:-30}, note:"人性尽丧", next:"END:madness"}
+    ]
+  },
+
+  n_final:{
+    chapter:"终章 · 命运落定",
+    scene:[`风停了。你的故事，走到了分岔的尽头。`],
+    choices:[],
+    evaluate:true
+  }
+};
+
+/* ===================== 结局 ===================== */
+const endings = {
+  earlyDeath:{
+    title:"碧血黄沙",
+    tier:"结局一 · 提前陨落",
+    body:[
+      `你倒在了福威镖局燃烧的门廊下，年少的血染红了青石。`,
+      `你没能等到复仇的那天，也没能看清这江湖的真面目。但或许，对你而言，这反而是最干净的一种结局——你始终是那个鲜衣怒马、心无城府的林少镖头，未曾被仇恨吞没，未曾挥刀自宫，未曾亲手斩断所爱。`,
+      `后世说书人提起你，只道一声："可惜。"`
+    ],
+    verdict:"命运评级：丙 · 虽死犹荣。你守住了本心，却也守不住性命。"
+  },
+  perfect:{
+    title:"笑傲林泉",
+    tier:"结局二 · 完美结局",
+    body:[
+      `你终究没有挥下那一刀。你以堂堂正道之身，了结了余沧海、木高峰的罪孽，也揭穿了岳不群的伪善。`,
+      `令狐冲感念你以情义相托，仗义相助；岳灵珊与你携手，远离了权谋倾轧的华山。你们归隐林泉，琴箫相和，再不问江湖恩仇。`,
+      `你证明了：即便生于这吃人的江湖，人，也未必非要变成怪物。`
+    ],
+    verdict:"命运评级：甲 · 大团圆。 sanity 与情义未失，方得笑傲。"
+  },
+  wander:{
+    title:"江湖南游客",
+    tier:"结局三 · 浪迹天涯",
+    body:[
+      `你放下了那部染血的剑谱，也放下了刻骨的仇恨。`,
+      `你没能手刃所有仇人，却也保住了自己的人性。你背起简便行囊，做一介闲散江湖客，看遍青山，偶遇旧人，相视一笑，再无杀机。`,
+      `岳灵珊或许另嫁，或许仍在等你——但至少，你不再被复仇驱使得夜不能寐。`
+    ],
+    verdict:"命运评级：乙 · 放下即解脱。未臻圆满，却得自在。"
+  },
+  bloodRevenge:{
+    title:"血色残阳",
+    tier:"结局四 · 复仇成功",
+    body:[
+      `你练成了辟邪剑法，将余沧海、木高峰尽数屠灭。大仇得报的那一刻，你立在尸山血海之中，却只觉得空。`,
+      `你失去了男儿身，失去了灵珊的真心，换来的，是一片没有温度的胜利。你活着，却像一具披着人皮的孤魂，行走在再无敌人的荒野上。`,
+      `江湖再无人敢欺你，也再无人，愿意靠近你。`
+    ],
+    verdict:"命运评级：乙- · 胜者孤独。复仇填不满内心的黑洞。"
+  },
+  meizhuang:{
+    title:"永困梅庄",
+    tier:"结局五 · 原著悲剧",
+    body:[
+      `你自宫练剑，手刃仇人，却在击杀木高峰时被毒水溅盲双目。你更亲手刺死了世间唯一真心爱你的人——岳灵珊。`,
+      `你投靠左冷禅，终在思过崖乱战中被令狐冲制服。念及灵珊临终"护他性命"的遗言，令狐冲挑断你的筋脉、废去你的武功，将你囚于杭州西湖底梅庄地牢。`,
+      `暗无天日之中，你将被困一生——这正是原著里，那个最令人毛骨悚然的结局。`
+    ],
+    verdict:"命运评级：丁 · 万劫不复。你赢了一切，却输掉了自己。"
+  },
+  demonLord:{
+    title:"魔焰滔天",
+    tier:"结局六 · 黑化称霸",
+    body:[
+      `你自宫练剑，手刃仇人，更在思过崖反噬其主，将左冷禅取而代之。`,
+      `你以盲人之身、诡谲剑法，啸聚残部，搅动江湖风雨。正派闻风丧胆，魔教亦忌你三分。`,
+      `你成了新的枭雄，站在权力之巅。只是每当夜深，你摸向空荡的衣襟，才惊觉——这天下，再无一人，是真心唤你一声"平之"。`
+    ],
+    verdict:"命运评级：丙+ · 枭雄末路。权倾天下，孤家寡人。"
+  },
+  madness:{
+    title:"疯魔入骨",
+    tier:"结局七 · 心魔癫狂",
+    body:[
+      `仇恨与自宫的戕害，彻底碾碎了你的神智。你分不清敌友，认不得昼夜，只余下癫狂的笑声回荡在山洞里。`,
+      `你曾想做顶天立地的人，最终却成了连自己都认不出的疯子。令狐冲看着你，长叹一声，终是下不去手——他只将你缚住，任你在黑暗里自言自语，直至终老。`,
+      `这，便是"匹夫无罪，怀璧其罪"最残忍的注脚。`
+    ],
+    verdict:"命运评级：戊 · 人性湮灭。比死亡更可怖的，是活着却已非人。"
+  }
+};
+
+function evaluateEnding(){
+  const s=state;
+  if(s.escaped){
+    if(!s.selfCastrated && s.sanity>=55 && s.lingShan>=20 && s.huChong>=10) return "perfect";
+    return "wander";
+  }
+  if(s.selfCastrated && s.revengeDone && !s.killedShan) return "bloodRevenge";
+  if(!s.selfCastrated && s.sanity>=55 && s.hatred<=45 && s.lingShan>=20 && s.huChong>=10) return "perfect";
+  if(!s.selfCastrated) return "wander";
+  return "meizhuang";
+}
+
+/* ===================== 渲染 ===================== */
+const app=document.getElementById("app");
+
+function statBars(){
+  let h='<div class="stats">';
+  for(const m of STAT_META){
+    const v=clamp(state[m.key],0,m.max);
+    h+=`<div class="stat"><div class="lab"><b>${m.name}</b><span class="val">${v}</span></div>`+
+       `<div class="bar ${m.cls}"><i style="width:${v}%"></i></div></div>`;
+  }
+  h+='</div>';
+  return h;
+}
+
+function renderCover(){
+  app.innerHTML=`
+    <div class="cover">
+      <div class="tag">金庸《笑傲江湖》同人 · 交互文字RPG</div>
+      <div class="big">林平之</div>
+      <div class="poem">
+        匹夫无罪，怀璧其罪。<br>
+        他曾是鲜衣怒马的少年，<br>
+        却被险恶的江湖、贪婪的人性，<br>
+        一步步逼成了自己的噩梦。<br>
+        今夜，命运的交椅交到你手中——<br>
+        <span class="tag">你能替他，改写结局吗？</span>
+      </div>
+      <div class="center"><button class="btn" onclick="startGame()">入 局</button></div>
+    </div>`;
+}
+
+function renderNode(id){
+  if(id.startsWith("END:")){
+    showEnding(id.slice(4));
+    return;
+  }
+  const node=story[id];
+  if(node.evaluate){ showEnding(evaluateEnding()); return; }
+  state.chapter=node.chapter;
+  let sceneHtml='';
+  let sc=node.scene;
+  if(typeof sc==="function") sc=sc();
+  const arr=(Array.isArray(sc)?sc:[sc]).map(x=>typeof x==="function"?x():x);
+  arr.forEach(p=>{ sceneHtml+=`<p>${p}</p>`; });
+
+  let choicesHtml='<div class="choices">';
+  let idx=1;
+  node.choices.forEach(c=>{
+    if(!reqMet(c.req)) return;
+    const eff=effText(c.eff);
+    choicesHtml+=`<button class="choice" onclick="go('${c.next}')">`+
+      `<span class="num">${idx}.</span>${c.text}`+
+      (eff?`<span class="eff">〔${eff}〕</span>`:``)+
+      `</button>`;
+    idx++;
   });
-})();
+  choicesHtml+='</div>';
+
+  app.innerHTML=`
+    <div class="chapter-tag">${node.chapter}</div>
+    <div class="scene">${sceneHtml}</div>
+    <div class="rule"></div>
+    ${statBars()}
+    ${choicesHtml}`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function go(next){
+  // apply effect baked into the choice by looking it up? We apply at click time:
+  // find current node & choice to apply effect
+  // simpler: store pending effect on the button via data, but we passed next only.
+  // We'll re-derive: search current rendered node for matching next and apply.
+  const cur=window.__cur;
+  if(cur && story[cur]){
+    const ch=story[cur].choices.find(c=>c.next===next && reqMet(c.req));
+    if(ch) applyEffect(ch.eff);
+  }
+  window.__cur=next.startsWith("END:")? null : next;
+  renderNode(next);
+}
+
+function showEnding(id){
+  const e=endings[id]||endings.meizhuang;
+  let bodyHtml='';
+  e.body.forEach(p=>bodyHtml+=`<p>${p}</p>`);
+  app.innerHTML=`
+    <div class="ending">
+      <h2>${e.title}</h2>
+      <div class="tier">${e.tier}</div>
+      <div class="rule"></div>
+      <div class="body">${bodyHtml}</div>
+      <div class="verdict">${e.verdict}</div>
+      <div class="stats" style="margin-top:18px;">${statBars().replace('<div class="stats">','<div class="stats" style="opacity:.9">')}</div>
+      <div class="center"><button class="btn" onclick="restart()">重 新 开 始</button></div>
+    </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function startGame(){
+  state=initState();
+  window.__cur="n_intro";
+  renderNode("n_intro");
+}
+function restart(){
+  startGame();
+}
+
+renderCover();
 </script>
-
 </body>
 </html>
