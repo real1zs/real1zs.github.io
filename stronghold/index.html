@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>核心盟约 × 副盟约 搭配分析报告</title>
+<style>
+  :root{
+    --ink:#1f2937; --ink2:#4b5563; --muted:#8a94a6;
+    --bg:#f4f6fa; --card:#ffffff; --line:#e3e8f0;
+    --primary:#1e3a5f; --primary-soft:#eef3fa;
+    --t0:#c0392b; --t0-bg:#fdf0ee;
+    --t1:#2563eb; --t1-bg:#eef4ff;
+    --t2:#7b8794; --t2-bg:#f1f3f7;
+    --gold:#b7791f; --gold-bg:#fdf6e9;
+    --green:#2e7d5b;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif; background:var(--bg); color:var(--ink); line-height:1.75; font-size:15px;}
+  .wrap{max-width:1100px; margin:0 auto; padding:32px 20px 60px;}
+  header.hero{background:linear-gradient(135deg,#1e3a5f 0%,#2d5a8e 60%,#3b6fa8 100%); color:#fff; border-radius:14px; padding:38px 36px 30px; margin-bottom:28px; box-shadow:0 6px 24px rgba(30,58,95,.25);}
+  header.hero h1{font-size:27px; letter-spacing:1px; margin-bottom:10px;}
+  header.hero p.sub{font-size:14.5px; opacity:.92; margin-bottom:14px;}
+  .meta{display:flex; flex-wrap:wrap; gap:8px 18px; font-size:12.5px; opacity:.85; border-top:1px solid rgba(255,255,255,.25); padding-top:12px;}
+  .meta span::before{content:"▪ ";}
+  h2.sec{font-size:20px; color:var(--primary); margin:38px 0 14px; padding-left:12px; border-left:5px solid var(--primary); letter-spacing:.5px;}
+  h3.sub{font-size:16.5px; color:var(--primary); margin:22px 0 10px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:22px 24px; margin-bottom:18px; box-shadow:0 2px 8px rgba(31,41,55,.05);}
+  p{margin-bottom:10px; color:var(--ink2);}
+  p strong, li strong{color:var(--ink);}
+  ul,ol{padding-left:22px; margin-bottom:10px; color:var(--ink2);}
+  li{margin-bottom:5px;}
+  table{width:100%; border-collapse:collapse; margin:12px 0 6px; font-size:13.5px; background:#fff;}
+  th{background:var(--primary); color:#fff; padding:8px 10px; text-align:left; font-weight:600; white-space:nowrap;}
+  td{padding:7px 10px; border-bottom:1px solid var(--line); vertical-align:top;}
+  tr:nth-child(even) td{background:#fafbfd;}
+  tr:hover td{background:var(--primary-soft);}
+  .toc{display:flex; flex-wrap:wrap; gap:8px;}
+  .toc a{display:inline-block; background:var(--primary-soft); color:var(--primary); text-decoration:none; padding:5px 13px; border-radius:20px; font-size:13px; border:1px solid #d5e0ef;}
+  .toc a:hover{background:var(--primary); color:#fff;}
+  .tag{display:inline-block; font-size:12px; padding:2px 9px; border-radius:10px; margin-right:6px; vertical-align:1px;}
+  .tag.core{background:#fdeee6; color:#b54708; border:1px solid #f3cdb2;}
+  .tag.sec2{background:#e8f1fb; color:#2563eb; border:1px solid #c8dcf3;}
+  .tag.sp{background:#f0ecf9; color:#6d5bb8; border:1px solid #d8cff0;}
+  .rating{white-space:nowrap; font-weight:700;}
+  .r3{color:var(--t0);} .r2{color:var(--t1);} .r1{color:var(--t2);}
+  .dot{letter-spacing:2px;}
+  .core-head{display:flex; align-items:baseline; flex-wrap:wrap; gap:10px; margin-bottom:6px;}
+  .core-head .num{font-size:13px; color:var(--muted); font-weight:700;}
+  .core-head h3{margin:0; font-size:19px; color:var(--primary);}
+  .core-head .idp{font-size:13px; color:var(--gold); font-weight:600;}
+  .mech{background:var(--primary-soft); border:1px solid #d5e0ef; border-left:4px solid var(--primary); border-radius:8px; padding:12px 16px; font-size:13.5px; color:#2c4a6e; margin:10px 0 14px;}
+  .mech b{color:var(--primary);}
+  .op-tag{display:inline-block; background:#fff; border:1px solid var(--line); border-radius:6px; padding:1px 8px; margin:2px 3px 2px 0; font-size:12.5px; color:var(--ink2);}
+  .op-tag b{color:var(--ink); font-weight:600;}
+  .op-tag.out{border-color:#f3cdb2; background:#fdf6ef;}
+  .op-tag.tmp{border-color:#d8f0e4; background:#f2faf6;}
+  .rec-note{font-size:12.5px; color:var(--muted); margin-top:4px;}
+  .chart-row{display:flex; align-items:center; gap:10px; margin-bottom:7px; font-size:13px;}
+  .chart-label{width:78px; text-align:right; color:var(--ink2); flex-shrink:0;}
+  .chart-bar{height:16px; border-radius:4px; display:flex; overflow:hidden; flex:1; max-width:560px;}
+  .bar-st{background:#3b6fa8;} .bar-ot{background:#e0a13c;}
+  .chart-val{color:var(--muted); font-size:12px; flex-shrink:0;}
+  .legend{display:flex; gap:16px; font-size:12.5px; color:var(--muted); margin:8px 0 2px 88px;}
+  .legend i{display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:-1px; margin-right:5px;}
+  .callout{background:var(--gold-bg); border:1px solid #eddfb8; border-left:4px solid var(--gold); border-radius:8px; padding:12px 16px; font-size:13.5px; color:#6b5620; margin:12px 0;}
+  .summary-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:12px; margin-top:8px;}
+  .summary-item{background:var(--t0-bg); border:1px solid #f2d4cf; border-radius:10px; padding:12px 16px; font-size:13.5px;}
+  .summary-item b{color:var(--t0);}
+  .summary-item.blue{background:var(--t1-bg); border-color:#d3e0f5;} .summary-item.blue b{color:var(--t1);}
+  .summary-item.green{background:#eef7f2; border-color:#cde7db;} .summary-item.green b{color:var(--green);}
+  footer{margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--muted); text-align:center;}
+  .m-table td, .m-table th{text-align:center; padding:6px 6px; font-size:12.5px;}
+  .m-table td.first{text-align:left; font-weight:700; color:var(--primary); white-space:nowrap;}
+  .m3{background:var(--t0-bg); color:var(--t0); font-weight:700;}
+  .m2{background:var(--t1-bg); color:var(--t1); font-weight:600;}
+  .m1{background:var(--t2-bg); color:var(--t2);}
+  .m0{color:#d3d8e0;}
+  @media (max-width:720px){ .wrap{padding:16px 10px 40px;} header.hero{padding:24px 20px;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============ 封面 ============ -->
+<header class="hero">
+  <h1>核心盟约 × 副盟约 搭配分析报告</h1>
+  <p class="sub">基于《operators.xlsx》155 名干员"特性"栏与《bonds.xlsx》26 个盟约激活效果的逐条机制协同性分析</p>
+  <div class="meta">
+    <span>数据来源：operators(1).xlsx（155 名干员，阶数 I–VI，普通/精锐双档）</span>
+    <span>bonds.xlsx（26 个盟约）</span>
+    <span>分析范围：10 核心 × 12 副盟约</span>
+    <span>生成日期：2026-11-09</span>
+  </div>
+</header>
+
+<!-- ============ 摘要 ============ -->
+<h2 class="sec">一、摘要</h2>
+<div class="card">
+  <p><strong>核心结论：盟约搭配的本质是"层数经济学"。</strong>两大文档中的机制围绕三条搭配主轴展开——<strong>触发频率放大、层数供给、阈值加速</strong>。每个核心盟约的强度都由"层数"驱动（受层数影响的数值成长 + 固定层数阈值的阶段奖励），因此副盟约的价值取决于它能否从外部放大核心盟约的<strong>叠层速率</strong>或<strong>层数转化效率</strong>。</p>
+  <ul>
+    <li><strong>触发频率型核心</strong>（萨尔贡·技能、卡西米尔·部署、叙拉古·部署后、炎·获得）→ 搭配能放大对应触发事件的副盟约（迅捷、突袭、不屈、投资人）。</li>
+    <li><strong>逐击伤害型核心</strong>（伊比利亚·每击DoT、叙拉古·异常状态、炎·元素损伤）→ 搭配攻速与法伤穿透类副盟约（灵巧、奥术、精准）。</li>
+    <li><strong>阈值奖励型核心</strong>（维多利亚·每25层重锤、谢拉格·每100层不融冰）→ 搭配固定层数供给类副盟约（助力、投资人）。</li>
+    <li><strong>血量/消耗型核心</strong>（阿戈尔·生命吞噬、乌萨斯·击杀滚雪球）→ 搭配生存与减伤类副盟约（坚守、聚合、不屈）。</li>
+  </ul>
+  <div class="summary-grid">
+    <div class="summary-item"><b>最稳通用副盟约</b><br>助力：每次休整期结束为所有已激活盟约<strong>+2层（3名在场时+4层）</strong>，无触发条件、无转化损耗，任何受层数影响的核心都直接受益。</div>
+    <div class="summary-item blue"><b>最强定向放大器</b><br>投资人：<strong>"获得时"类特质每次触发2次</strong>——炎（5名获得时叠层干员）、谢拉格（3名）两大核心的叠层速率直接翻倍。</div>
+    <div class="summary-item green"><b>最完整闭环</b><br>卡西米尔+突袭/不屈：突袭自动再部署与不屈倒地复活都制造"部署事件"，而卡西米尔的核心词条正是<strong>"每次有干员部署时攻击力提升至战斗结束"</strong>。</div>
+  </div>
+  <p class="rec-note">※ 本报告所有结论均仅基于两份文档所载机制与数值推导，未引入外部资料；盟约描述中"受层数影响"的具体比例文档未给出，推荐度评级反映的是<strong>机制协同方向与数值杠杆的可确定性</strong>。</p>
+</div>
+
+<!-- ============ 方法论 ============ -->
+<h2 class="sec">二、方法论：两类重点干员</h2>
+<div class="card">
+  <p>按任务要求，分析优先聚焦两类干员。它们分别构成盟约层数体系的"进"与"出"：</p>
+  <ul>
+    <li><strong>叠层型干员（"层数+X"描述）</strong>：负责为核心盟约供给层数，是发动机。例如鸿雪"每次开启技能时使已激活的【萨尔贡】【精准】层数+4（每回合至多叠加16层）"。</li>
+    <li><strong>输出型干员（"每叠加X层"触发）</strong>：负责把层数转化为面板或触发效果，是输出端。例如艾雅法拉"【莱塔尼亚】【奥术】每叠加1层，本干员技力自然回复速度+0.02/秒，攻击力+1%（精锐）"。</li>
+  </ul>
+  <p>叠加两方面数据后，10 个核心盟约的干员结构如下（每盟约恰为 10 名干员，双盟约/三盟约干员在多个体系重复计入；伊比利亚另含"叠加等同于售出价格层数"的旅骨、棘刺）：</p>
+  <div class="legend"><span><i style="background:#3b6fa8"></i>叠层型人数</span><span><i style="background:#e0a13c"></i>输出型人数</span></div>
+  <div style="margin-top:6px">
+    <div class="chart-row"><span class="chart-label">炎</span><div class="chart-bar"><div class="bar-st" style="width:87.5%"></div><div class="bar-ot" style="width:12.5%"></div></div><span class="chart-val">7 + 1</span></div>
+    <div class="chart-row"><span class="chart-label">乌萨斯</span><div class="chart-bar"><div class="bar-st" style="width:75%"></div><div class="bar-ot" style="width:25%"></div></div><span class="chart-val">6 + 2</span></div>
+    <div class="chart-row"><span class="chart-label">卡西米尔</span><div class="chart-bar"><div class="bar-st" style="width:75%"></div><div class="bar-ot" style="width:25%"></div></div><span class="chart-val">6 + 2</span></div>
+    <div class="chart-row"><span class="chart-label">莱塔尼亚</span><div class="chart-bar"><div class="bar-st" style="width:75%"></div><div class="bar-ot" style="width:25%"></div></div><span class="chart-val">6 + 2</span></div>
+    <div class="chart-row"><span class="chart-label">萨尔贡</span><div class="chart-bar"><div class="bar-st" style="width:62.5%"></div><div class="bar-ot" style="width:12.5%"></div></div><span class="chart-val">5 + 1</span></div>
+    <div class="chart-row"><span class="chart-label">维多利亚</span><div class="chart-bar"><div class="bar-st" style="width:62.5%"></div><div class="bar-ot" style="width:12.5%"></div></div><span class="chart-val">5 + 1</span></div>
+    <div class="chart-row"><span class="chart-label">谢拉格</span><div class="chart-bar"><div class="bar-st" style="width:62.5%"></div><div class="bar-ot" style="width:25%"></div></div><span class="chart-val">5 + 2</span></div>
+    <div class="chart-row"><span class="chart-label">伊比利亚</span><div class="chart-bar"><div class="bar-st" style="width:62.5%"></div><div class="bar-ot" style="width:25%"></div></div><span class="chart-val">5 + 2</span></div>
+    <div class="chart-row"><span class="chart-label">叙拉古</span><div class="chart-bar"><div class="bar-st" style="width:62.5%"></div><div class="bar-ot" style="width:25%"></div></div><span class="chart-val">5 + 2</span></div>
+    <div class="chart-row"><span class="chart-label">阿戈尔</span><div class="chart-bar"><div class="bar-st" style="width:50%"></div><div class="bar-ot" style="width:50%"></div></div><span class="chart-val">4 + 4</span></div>
+  </div>
+  <p style="margin-top:10px">结构差异本身就是搭配线索：<strong>炎、乌萨斯、卡西米尔、莱塔尼亚"发动机多"</strong>（优先选择放大叠层触发频率的副盟约）；<strong>阿戈尔"输出端密集"</strong>（4 名"每叠加20/10层"干员，优先稳定供层与生存）；<strong>伊比利亚"发动机最少但机制自循环"</strong>（DoT 逐击叠满，优先攻速放大）。</p>
+</div>
+
+<!-- ============ 总览矩阵 ============ -->
+<h2 class="sec">三、搭配总览矩阵</h2>
+<div class="card">
+  <p>●●● 首选（机制强闭环）　●● 推荐（明确协同）　● 备选（特定干员/条件协同）　— 文档内未见显著协同</p>
+  <table class="m-table">
+    <tr><th class="first">核心盟约</th><th>助力</th><th>投资人</th><th>突袭</th><th>不屈</th><th>迅捷</th><th>灵巧</th><th>奥术</th><th>精准</th><th>坚守</th><th>聚合</th><th>远见</th><th>奇迹</th></tr>
+    <tr><td class="first">乌萨斯</td><td class="m3">●●●</td><td class="m0">—</td><td class="m2">●●</td><td class="m1">●</td><td class="m1">●</td><td class="m2">●●</td><td class="m0">—</td><td class="m0">—</td><td class="m2">●●</td><td class="m0">—</td><td class="m0">—</td><td class="m0">—</td></tr>
+    <tr><td class="first">萨尔贡</td><td class="m1">●</td><td class="m0">—</td><td class="m0">—</td><td class="m1">●</td><td class="m3">●●●</td><td class="m0">—</td><td class="m2">●●</td><td class="m1">●</td><td class="m2">●●</td><td class="m1">●</td><td class="m0">—</td><td class="m0">—</td></tr>
+    <tr><td class="first">阿戈尔</td><td class="m1">●</td><td class="m0">—</td><td class="m1">●</td><td class="m2">●●</td><td class="m0">—</td><td class="m0">—</td><td class="m0">—</td><td class="m0">—</td><td class="m3">●●●</td><td class="m2">●●</td><td class="m0">—</td><td class="m0">—</td></tr>
+    <tr><td class="first">卡西米尔</td><td class="m0">—</td><td class="m0">—</td><td class="m3">●●●</td><td class="m3">●●●</td><td class="m2">●●</td><td class="m0">—</td><td class="m0">—</td><td class="m2">●●</td><td class="m0">—</td><td class="m0">—</td><td class="m1">●</td><td class="m0">—</td></tr>
+    <tr><td class="first">维多利亚</td><td class="m3">●●●</td><td class="m1">●</td><td class="m0">—</td><td class="m0">—</td><td class="m1">●</td><td class="m0">—</td><td class="m1">●</td><td class="m0">—</td><td class="m2">●●</td><td class="m0">—</td><td class="m0">—</td><td class="m0">—</td></tr>
+    <tr><td class="first">谢拉格</td><td class="m1">●</td><td class="m3">●●●</td><td class="m0">—</td><td class="m0">—</td><td class="m2">●●</td><td class="m1">●</td><td class="m2">●●</td><td class="m2">●●</td><td class="m0">—</td><td class="m0">—</td><td class="m0">—</td><td class="m1">●</td></tr>
+    <tr><td class="first">伊比利亚</td><td class="m0">—</td><td class="m0">—</td><td class="m0">—</td><td class="m0">—</td><td class="m2">●●</td><td class="m3">●●●</td><td class="m3">●●●</td><td class="m2">●●</td><td class="m0">—</td><td class="m1">●</td><td class="m0">—</td><td class="m0">—</td></tr>
+    <tr><td class="first">叙拉古</td><td class="m0">—</td><td class="m0">—</td><td class="m3">●●●</td><td class="m0">—</td><td class="m1">●</td><td class="m3">●●●</td><td class="m0">—</td><td class="m2">●●</td><td class="m0">—</td><td class="m0">—</td><td class="m0">—</td><td class="m2">●●</td></tr>
+    <tr><td class="first">炎</td><td class="m0">—</td><td class="m3">●●●</td><td class="m0">—</td><td class="m0">—</td><td class="m1">●</td><td class="m3">●●●</td><td class="m2">●●</td><td class="m0">—</td><td class="m0">—</td><td class="m1">●</td><td class="m2">●●</td><td class="m0">—</td></tr>
+    <tr><td class="first">莱塔尼亚</td><td class="m0">—</td><td class="m0">—</td><td class="m0">—</td><td class="m0">—</td><td class="m1">●</td><td class="m0">—</td><td class="m2">●●</td><td class="m3">●●●</td><td class="m1">●</td><td class="m2">●●</td><td class="m1">●</td><td class="m0">—</td></tr>
+  </table>
+  <p class="rec-note">※ 评级依据见第四节各盟约分节；"—"不代表完全不可用，仅表示文档内未发现超越泛用收益（如助力的+2层、远见/奇迹的经济收益）的定向协同。</p>
+</div>
+
+<!-- ============ 目录 ============ -->
+<h2 class="sec">四、逐盟约分析</h2>
+<div class="card">
+  <p>每节包含四部分：盟约机制摘要（引自 bonds.xlsx）→ 叠层型干员 → 输出型干员 → 推荐副盟约及搭配理由。</p>
+  <div class="toc">
+    <a href="#c1">1. 乌萨斯</a><a href="#c2">2. 萨尔贡</a><a href="#c3">3. 阿戈尔</a><a href="#c4">4. 卡西米尔</a><a href="#c5">5. 维多利亚</a>
+    <a href="#c6">6. 谢拉格</a><a href="#c7">7. 伊比利亚</a><a href="#c8">8. 叙拉古</a><a href="#c9">9. 炎</a><a href="#c10">10. 莱塔尼亚</a>
+  </div>
+</div>
+
+<!-- ============ 1 乌萨斯 ============ -->
+<div class="card" id="c1">
+  <div class="core-head"><span class="num">01</span><h3>乌萨斯</h3><span class="idp">定位：击杀滚雪球 · 高压前排消耗战</span></div>
+  <div class="mech"><b>机制摘要：</b>攻击力和生命值提升（受层数）；击倒单位时为【乌萨斯】叠加2层<b>临时层数</b>。6名不同干员在场：所受伤害按比例转化为10秒生命流失（伤害来源被击倒则停止流失）；阻挡期间敌人每秒受其攻击力比例的法术伤害；击杀叠层提升至4层/次。</div>
+  <h3 class="sub">层数来源（叠层型干员）</h3>
+  <p>
+    <span class="op-tag tmp"><b>折桠</b> I｜进休整期转化2/4层临时→固定</span>
+    <span class="op-tag tmp"><b>乌啾</b> III｜进休整期按场上乌萨斯人数转化1/2层</span>
+    <span class="op-tag"><b>烈夏</b> I｜战斗开始时临时层+4/+8</span>
+    <span class="op-tag"><b>赫拉格</b> IV｜部署时+4/+8（每场至多12/24）</span>
+    <span class="op-tag"><b>冻河</b> V｜范围内击倒+1/+2（每场至多16/32，双叠迅捷）</span>
+    <span class="op-tag"><b>塔露拉</b> VI｜击杀临时层强化4→6层（6在场时8层）</span>
+  </p>
+  <h3 class="sub">输出端（输出型干员）</h3>
+  <p>
+    <span class="op-tag out"><b>维伊</b> IV｜每叠加2/1层攻速+1</span>
+    <span class="op-tag out"><b>怒潮凛冬</b> V｜每叠加10层技力回复+0.1/0.2每秒、攻击+1%/2%</span>
+  </p>
+  <h3 class="sub">推荐副盟约</h3>
+  <table>
+    <tr><th style="width:90px">副盟约</th><th style="width:70px">推荐度</th><th>搭配理由（机制协同）</th></tr>
+    <tr><td><b>助力</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>乌萨斯是唯一以<b>临时层数</b>为核心资源的盟约——击杀所得临时层必须经折桠/乌啾在休整期转化，存在转化损耗与转化者依赖。助力在休整期结束时为全部已激活盟约<b>无条件+2层（3在场+4层）</b>，直接以固定层形式入账，完全绕开转化瓶颈；其防御提升与再部署时间缩短又提高前排返场率，反哺"击倒→叠层"循环。</td></tr>
+    <tr><td><b>突袭</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>赫拉格为乌萨斯/突袭双归属，"部署时+4/+8"的触发词与突袭的自动再部署天然联动；突袭再部署期间的攻击/生命提升（受层数）强化返场击杀；<b>50层时全队攻速+50</b>，直接放大维伊（每2层攻速+1）与怒潮凛冬两名输出端，并提高击杀速率→临时层获取速率。</td></tr>
+    <tr><td><b>坚守</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>双重互补：①乌萨斯6在场的"伤害转化10秒生命流失"是抗爆发机制，而坚守3在场的"40%伤害由坚守干员平均承担"把大额瞬发伤害切成持续小伤——恰好被生命流失机制软化，两者叠加显著降低猝死率；②坚守受击反伤+40%脆弱与乌萨斯"阻挡期间敌人每秒受攻击力比例法伤"同源触发，前排站得越久、击杀越多、临时层滚雪球越快。</td></tr>
+    <tr><td><b>灵巧</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>攻速=击倒速率=临时层获取速率，是乌萨斯雪球的"斜率"；灵巧光环覆盖自身及周围4格（40层扩至8格），与维伊的攻速成长同系叠乘。奥尔佳（乌萨斯/灵巧）获得乌萨斯呼吸器补装备位。</td></tr>
+    <tr><td><b>不屈 / 迅捷</b></td><td class="rating r1"><span class="dot">●</span>备选</td><td>不屈：折桠为乌萨斯/不屈双归属；地面复活延续击杀引擎，3在场死亡全队+5技力。迅捷：冻河双叠层一人供两层；40层全队技能回15技力提升收割效率。</td></tr>
+  </table>
+</div>
+
+<!-- ============ 2 萨尔贡 ============ -->
+<div class="card" id="c2">
+  <div class="core-head"><span class="num">02</span><h3>萨尔贡</h3><span class="idp">定位：技能循环引擎 · 流沙阵地控制</span></div>
+  <div class="mech"><b>机制摘要：</b>开启技能时全体萨尔贡攻速提升（有上限，持续受层数）；6名不同干员在场：每次开技能在攻击范围制造流沙地面（迟钝+每5秒法术伤害+束缚1秒），技能持续期间迟钝×2且每秒受法术伤害（均受层数）。</div>
+  <h3 class="sub">层数来源（叠层型干员）</h3>
+  <p>
+    <span class="op-tag"><b>艾丝黛尔</b> I｜开技能+1/+2（每回合至多2/4）</span>
+    <span class="op-tag"><b>泡泡</b> II｜开技能+2/+4（双叠坚守，每回合至多4/8）</span>
+    <span class="op-tag"><b>森蚺</b> III｜部署时+4/+8（每回合至多12/24）</span>
+    <span class="op-tag"><b>佩佩</b> V｜周围八格沉睡/眩晕事件+1/+2（每回合至多9/18）</span>
+    <span class="op-tag"><b>鸿雪</b> V｜开技能+4/+8（双叠精准，每回合至多16/32）</span>
+  </p>
+  <h3 class="sub">输出端（输出型干员）</h3>
+  <p>
+    <span class="op-tag out"><b>真言</b> VI｜每叠加5层攻击+1%/2%</span>
+  </p>
+  <h3 class="sub">推荐副盟约</h3>
+  <table>
+    <tr><th style="width:90px">副盟约</th><th style="width:70px">推荐度</th><th>搭配理由（机制协同）</th></tr>
+    <tr><td><b>迅捷</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>全体系一阶乘数：核心词条与5名叠层干员中3名（艾丝黛尔、泡泡、鸿雪）的触发词都是<b>"开启技能"</b>。迅捷使技能结束有概率立刻回复12点技力（受层数）、<b>40层后所有干员技能结束等概率+15技力</b>——技能频率的每一次提升，同时放大①盟约攻速buff覆盖率②流沙制造频率③叠层干员的每回合叠层上限利用率。这是文档中触发词重合度最高的一组核心×副盟约搭配。</td></tr>
+    <tr><td><b>奥术</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>流沙的全部伤害构成为<b>法术伤害</b>（每5秒一次/技能期间每秒）；奥术逐击附加法术伤害（受层数），3在场后场上敌人每次受伤法抗降低（上限受层数）——对流沙DoT与技能期间的每秒法伤双重乘算。异客（萨尔贡/奥术）进休整期获得盟约之币/浓茶，补给经济。</td></tr>
+    <tr><td><b>坚守</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>泡泡（萨尔贡/坚守）双叠层是体系内叠层速率最高的干员（精锐每回合+4×2盟约）；流沙的迟钝+束缚本身是控制链，坚守的分摊+反伤延长阵地战时间——技能循环需要时间铺流沙，前排越稳流沙覆盖率越高。</td></tr>
+    <tr><td><b>不屈 / 聚合 / 精准</b></td><td class="rating r1"><span class="dot">●</span>备选</td><td>不屈：森蚺双归属，部署叠层+死亡复活容错。聚合：莎草（萨尔贡/聚合）开技能为身前一格回复2/4点技力，是第二台技能循环加速器，范围回血适配消耗战。精准：鸿雪双叠层，真言等输出吃攻击与穿透。</td></tr>
+  </table>
+</div>
+
+<!-- ============ 3 阿戈尔 ============ -->
+<div class="card" id="c3">
+  <div class="core-head"><span class="num">03</span><h3>阿戈尔</h3><span class="idp">定位：生命池 · 吞噬增益 · 每20层阈值档位</span></div>
+  <div class="mech"><b>机制摘要：</b>生命值提升（受层数）；战斗开始时依次吞噬身前一格干员（造成5000点物理伤害并获得其基础攻击力与阻挡数，叠加等于被吞噬者等阶的层数）；6名不同干员在场：前3名被击倒时立刻复活。</div>
+  <h3 class="sub">层数来源（叠层型干员）</h3>
+  <p>
+    <span class="op-tag"><b>幽灵鲨</b> I｜部署时+1/+2（每回合至多1/2）</span>
+    <span class="op-tag"><b>安哲拉</b> II｜每击倒敌我单位+3/+6（每回合至多9/18，双叠助力）</span>
+    <span class="op-tag"><b>斯卡蒂</b> III｜部署时+4/+8（每场至多8/16）</span>
+    <span class="op-tag"><b>浊心斯卡蒂</b> VI｜范围内我方部署+2/+4（每场至多20/40）</span>
+    <span class="op-tag"><b>歌蕾蒂娅</b> V｜进休整期同行3人时复制获取阿戈尔干员</span>
+  </p>
+  <h3 class="sub">输出端（输出型干员，全部按每20/10层一档）</h3>
+  <p>
+    <span class="op-tag out"><b>深巡</b> III｜部署时自身及周围四格攻速+1，持续30秒</span>
+    <span class="op-tag out"><b>水月</b> IV｜每次造成伤害使目标移速-1%，持续3秒</span>
+    <span class="op-tag out"><b>乌尔比安</b> V｜部署时自身及周围四格攻击+1%，持续30秒</span>
+    <span class="op-tag out"><b>克莱门莎</b> VI｜全体敌人侵蚀损伤冷却恢复速度+1%</span>
+  </p>
+  <h3 class="sub">推荐副盟约</h3>
+  <table>
+    <tr><th style="width:90px">副盟约</th><th style="width:70px">推荐度</th><th>搭配理由（机制协同）</th></tr>
+    <tr><td><b>坚守</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>同系属性乘算：坚守为<b>全体干员</b>生命值提升（受层数），与阿戈尔"生命值提升（受层数）"直接叠乘出全档最大的血池；3在场后40%伤害分摊需要高血量承担者——吞噬后获得目标攻击力与<b>阻挡数</b>的阿戈尔干员正是最佳承担者，其受击反伤+40%脆弱也依赖"能扛"这一前提。深巡（阿戈尔/坚守）双归属，部署时按层数提供攻速光环。</td></tr>
+    <tr><td><b>聚合</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>聚合提供攻击范围内每秒回血+回复元素损伤（按攻击力比例，受层数），3在场追加庇护——与阿戈尔"大血池+复活（6在场前3名）"组成双保险的消耗战结构，复活后的干员需要续航支撑二段作战。浊心斯卡蒂（阿戈尔/聚合）我方部署时双叠层，部署事件越多收益越高。</td></tr>
+    <tr><td><b>不屈</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>归溟幽灵鲨（阿戈尔/不屈）被击倒/替身替换时为周围八格阿戈尔回复5/10点技力；叠加"6在场前3名复活"与不屈的倒地概率复活、3在场死亡全队+5技力，形成<b>死亡本身成为资源</b>的极端容错体系——阵亡=复活+技力+再入场吞层。</td></tr>
+    <tr><td><b>突袭 / 助力</b></td><td class="rating r1"><span class="dot">●</span>备选</td><td>突袭：斯卡蒂双归属，"部署时+4/+8"与突袭自动再部署联动；50层全队攻速+50放大深巡/乌尔比安30秒增益窗口的输出密度。助力：固定层+2/+4稳定喂给4名输出端的"每20/10层"档位；吞噬层数=被吞噬者等阶（越高阶越肥），助力提供无吞噬损耗的保底供给。</td></tr>
+  </table>
+  <p class="rec-note">※ 阵型提示：吞噬"依次吞噬身前一格"，应将低价值/低阶工具人放在阿戈尔身前作为吞噬材料，同时该机制意味着阿戈尔不宜两两相邻。</p>
+</div>
+
+<!-- ============ 4 卡西米尔 ============ -->
+<div class="card" id="c4">
+  <div class="core-head"><span class="num">04</span><h3>卡西米尔</h3><span class="idp">定位：部署次数引擎 · 骑士接力 · 真伤窗口</span></div>
+  <div class="mech"><b>机制摘要：</b>每次有干员部署时，卡西米尔干员攻击力提升持续至战斗结束（上限受层数）；6名不同干员在场：地面干员被击倒时离场并召唤整备区最右侧卡西米尔干员上场（接力），且技能或部署后30秒内攻击附带攻击力65%的真实伤害。</div>
+  <h3 class="sub">层数来源（叠层型干员）</h3>
+  <p>
+    <span class="op-tag"><b>野鬃</b> I｜部署时+1/+2（每回合至多2/4，双叠助力）</span>
+    <span class="op-tag"><b>砾</b> II｜部署时+2/+4（每场至多12/24，双叠不屈）</span>
+    <span class="op-tag"><b>瑕光</b> III｜部署时全盟约+3/+6（每场至多9/18）</span>
+    <span class="op-tag"><b>焰尾</b> V｜休整期按整备区人数+1/+2（双叠迅捷）</span>
+    <span class="op-tag"><b>耀骑士临光</b> VI｜击倒时召唤+6/+12（双叠突袭，每名每回合至多12/24）</span>
+    <span class="op-tag"><b>薇薇安娜</b> V｜同类盟约叠层上限+7/+14</span>
+  </p>
+  <h3 class="sub">输出端（输出型干员）</h3>
+  <p>
+    <span class="op-tag out"><b>玛恩纳</b> IV｜每叠加5层，部署后100秒内攻击+10/20、生命上限+50/100</span>
+    <span class="op-tag out"><b>锏</b> VI｜每叠加6/3层，技力回复+0.01/秒、生命上限+1%</span>
+  </p>
+  <h3 class="sub">推荐副盟约</h3>
+  <table>
+    <tr><th style="width:90px">副盟约</th><th style="width:70px">推荐度</th><th>搭配理由（机制协同）</th></tr>
+    <tr><td><b>突袭</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>核心词条是<b>"每次有干员部署时"</b>——突袭干员10秒无目标即保留技力自动再部署至地面敌人周围，等于零成本制造部署事件：①攻击力"持续至战斗结束"的堆叠速率提升；②每次部署刷新<b>30秒65%攻击力真伤窗口</b>；③瑕光（部署时全盟约+3/+6）与耀骑士临光（击倒召唤+叠层）两名双归属干员的触发词全部被再部署放大。突袭期间攻/血提升（受层数）还保证返场即战力。</td></tr>
+    <tr><td><b>不屈</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>与突袭同构的第二个部署事件源：地面干员被击倒概率立即重新部署——死亡转化为部署触发；3在场时死亡使全场干员技力+5，与"技能后30秒真伤窗口"联动。叠加6在场的骑士接力，阵亡≈换人+叠层+真伤刷新，<b>卡西米尔是唯一把减员转化为增益的核心</b>。历阵锐枪芬（卡西米尔/远见）被击倒召唤整备区干员并使再部署时间-30/-60%，加速整条循环；砾双归属供层。</td></tr>
+    <tr><td><b>迅捷</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>焰尾（卡西米尔/迅捷）休整期按整备区人数双叠层，是体系内唯一不依赖部署/阵亡的稳定层数源；迅捷的技能回转提高技能频率→30秒真伤窗口的覆盖率提升；40层全队+15技力。</td></tr>
+    <tr><td><b>精准</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>远牙（卡西米尔/精准）范围内每击倒一名敌人使攻击范围内及整备区干员再部署时间-3/-6秒——加速部署循环的同时强化卡西米尔主词条；3在场精准扩展至<b>所有远程干员</b>并无视双抗，让"攻击力无限成长（至战斗结束）"的玛恩纳、锏等输出位打得穿高防高抗目标。</td></tr>
+    <tr><td><b>远见</b></td><td class="rating r1"><span class="dot">●</span>备选</td><td>历阵锐枪芬双归属；每叠加10层+2资金的经济用于持续购人——买人即部署资源，间接喂主词条；整备区即可激活不占场上位。</td></tr>
+  </table>
+</div>
+
+<!-- ============ 5 维多利亚 ============ -->
+<div class="card" id="c5">
+  <div class="core-head"><span class="num">05</span><h3>维多利亚</h3><span class="idp">定位：装备体系 · 每25层重锤阈值</span></div>
+  <div class="mech"><b>机制摘要：</b>携带装备的维多利亚干员伤害提升（受层数）；每叠加25层获得1件带随机效果的维式重锤；6名不同干员在场：每携带1件装备攻击力提升，携带进阶装备时额外提升。</div>
+  <h3 class="sub">层数来源（叠层型干员）</h3>
+  <p>
+    <span class="op-tag"><b>慕斯</b> I｜休整期结束+1/+2</span>
+    <span class="op-tag"><b>Miss.Christine</b> II｜休整期结束+3/+6（双叠奥术）</span>
+    <span class="op-tag"><b>涤火杰西卡</b> IV｜休整期按场上带装备干员数+2/+4（双叠坚守）</span>
+    <span class="op-tag"><b>维娜·维多利亚</b> V｜休整期按场上不同阶维干员数+2/+4（双叠奇迹）</span>
+    <span class="op-tag"><b>烛煌</b> VI｜元素损伤爆发事件+1/+2（每回合至多12/24，三叠炎/迅捷）</span>
+  </p>
+  <h3 class="sub">输出端（输出型干员）</h3>
+  <p>
+    <span class="op-tag out"><b>哈洛德</b> II｜每叠加5层攻击+1%/2%（双叠谢拉格）</span>
+  </p>
+  <h3 class="sub">推荐副盟约</h3>
+  <table>
+    <tr><th style="width:90px">副盟约</th><th style="width:70px">推荐度</th><th>搭配理由（机制协同）</th></tr>
+    <tr><td><b>助力</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>维多利亚是阈值最密的核心——<b>每25层1件重锤</b>，且6在场后"每件装备+攻击力"把锤直接转成面板。助力每次休整期+2层（3在场+4层）是最稳定的阈值推进器（3在场时约6个休整期白送1锤），且不受战斗表现波动影响。白铁（维多利亚/助力）进休整期把携带装备升级为精锐版本，吃满"进阶装备额外提升"词条；助力自身附带的全体防御+再部署缩短泛用保值。</td></tr>
+    <tr><td><b>坚守</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>涤火杰西卡（维多利亚/坚守）按场上<b>携带装备的干员数</b>+2/+4——装备普及率本身就是层数，与助力推锤形成"装备越多→层越多→锤越多→装备越多"的双引擎正循环；坚守护住携带重锤的输出位，避免装备载体阵亡（文档未说明装备是否随阵亡掉落，保人是保守策略）。</td></tr>
+    <tr><td><b>投资人</b></td><td class="rating r1"><span class="dot">●</span>备选</td><td>凯瑟琳（维多利亚/远见）获得时得1件维式重锤（小概率特殊/精锐必得特殊+小概率终极）——投资人"获得时触发2次"直接把每次购买的锤产量翻倍，是体系内唯一能被投资人定向放大的获取点；投资人整备区即可激活，不占场上6人名额。</td></tr>
+    <tr><td><b>奥术 / 迅捷</b></td><td class="rating r1"><span class="dot">●</span>备选</td><td>奥术：Miss.Christine双叠层（休整期+3/+6同时喂两盟约），每击附加法伤放大"携带装备伤害提升"后的输出基数。迅捷：烛煌三重归属（炎/维/迅捷），元素爆发双叠层供层；酒神进休整期获得随机装备补充装备池。</td></tr>
+  </table>
+  <p class="rec-note">※ 体系内经济件：海沫（休整期售出价格+1/+2，至多4/8）、温妮（售出价3/6）提高售出收益，属运转辅助。</p>
+</div>
+
+<!-- ============ 6 谢拉格 ============ -->
+<div class="card" id="c6">
+  <div class="core-head"><span class="num">06</span><h3>谢拉格</h3><span class="idp">定位：冻结协同 · 每100层不融冰 · 雪山巨人</span></div>
+  <div class="mech"><b>机制摘要：</b>伤害提升，对寒冷、冻结敌人获得额外提升（受层数）；每叠加100层获得1件谢拉格不融冰；6名不同干员在场：战斗开始召唤雪山巨人（攻击与生命受层数，雪山形态阻挡+溅射、攻击冻结敌人造成高额法术伤害并解除冻结；巨人形态机动远程溅射）。</div>
+  <h3 class="sub">层数来源（叠层型干员）</h3>
+  <p>
+    <span class="op-tag"><b>雪猎</b> II｜获得时+4/+8（双叠精准）</span>
+    <span class="op-tag"><b>极光</b> III｜获得时+1（升级制，至多12层）</span>
+    <span class="op-tag"><b>初雪</b> III｜范围内敌人进入冻结+1/+2（每回合至多16/32）</span>
+    <span class="op-tag"><b>圣聆初雪</b> V｜范围内敌人冻结+1/+2且回复1/2技力（每回合至多24/48）</span>
+    <span class="op-tag"><b>凛御银灰</b> V｜身前谢拉格/灵巧干员叠层上限+75%/150%（三叠灵巧/投资人）</span>
+  </p>
+  <h3 class="sub">输出端（输出型干员）</h3>
+  <p>
+    <span class="op-tag out"><b>哈洛德</b> II｜每叠加5层攻击+1%/2%（双叠维多利亚）</span>
+    <span class="op-tag out"><b>锏</b> VI｜每叠加6/3层技力回复+0.01/秒、生命上限+1%（三叠卡西米尔/莱塔尼亚）</span>
+  </p>
+  <h3 class="sub">推荐副盟约</h3>
+  <table>
+    <tr><th style="width:90px">副盟约</th><th style="width:70px">推荐度</th><th>搭配理由（机制协同）</th></tr>
+    <tr><td><b>投资人</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>谢拉格叠层干员高度集中于<b>"获得时"触发</b>（雪猎+4/8、极光升级制12层、耶拉获得不融冰）——投资人使获得时特质触发2次，等于每次购买即双倍入层，直接加速<b>每100层1件不融冰</b>的长周期阈值；凛御银灰（谢拉格/灵巧/投资人）三重归属，其"身前谢拉格干员叠层上限+75%/150%"同时解锁初雪（16/32）、圣聆初雪（24/48）的每回合上限瓶颈。配合"价格-1（80层）/-1（150层）"的远见折扣可形成低成本购人循环。</td></tr>
+    <tr><td><b>奥术</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>核心的斩杀线在雪山形态"攻击冻结敌人造成<b>高额法术伤害</b>"——奥术3在场后敌人每次受伤法抗逐次降低（上限受层数），直接放大巨人对冻结目标的处决伤害与全队法伤基数；圣聆初雪（谢拉格/奥术）冻结即叠层+回技力，双收益。</td></tr>
+    <tr><td><b>迅捷</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>灵知（谢拉格/迅捷）获得时获得特殊刷新（下次刷新至少出现1/2名谢拉格干员）——定向补货是凑"6名不同干员在场"（巨人召唤+不融冰双门槛）的最强工具；圣聆初雪的冻结回技力+迅捷的技能结束回12/15技力，维持冻结技能的循环施放，冻结事件密度=初雪/圣聆初雪的叠层密度。</td></tr>
+    <tr><td><b>精准</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>雪猎双归属叠层；3在场后扩展至所有远程干员+无视双抗——"对寒冷/冻结敌人额外提升"的增伤词条需要打得动的远程载体承接；角峰对每名敌人首次造成伤害施加2/4秒寒冷，为全队开增伤窗口。</td></tr>
+    <tr><td><b>奇迹 / 灵巧</b></td><td class="rating r1"><span class="dot">●</span>备选</td><td>奇迹：耶拉（谢拉格/奇迹）获得时不融冰×2；灵知的特殊刷新与奇迹的免费刷新/100层保底高阶干员组成补货循环。灵巧：凛御银灰双归属；攻速提升冻结施加频率。</td></tr>
+  </table>
+</div>
+
+<!-- ============ 7 伊比利亚 ============ -->
+<div class="card" id="c7">
+  <div class="core-head"><span class="num">07</span><h3>伊比利亚</h3><span class="idp">定位：逐击DoT · 叠满10层 · 弹射与减速</span></div>
+  <div class="mech"><b>机制摘要：</b>每次造成伤害时使目标每秒受该单位攻击力一定比例的持续法术伤害（至多叠加10次，持续10秒）；6名不同干员在场：持续法伤提升至2倍并使目标移速-4%（至多-80%），每次造成伤害有概率弹射至周围敌人造成300%攻击力的法术伤害。</div>
+  <h3 class="sub">层数来源（叠层型干员）</h3>
+  <p>
+    <span class="op-tag"><b>深靛</b> I｜休整期结束+2/+4</span>
+    <span class="op-tag"><b>旅骨</b> III｜休整期按自身售出价格叠加（双叠精准）</span>
+    <span class="op-tag"><b>棘刺</b> V｜休整期按场上所有干员售出价格总和叠加（每回合至多12/24，双叠奥术）</span>
+    <span class="op-tag"><b>引星棘刺</b> VI｜休整期结束+12/+24（双叠迅捷）</span>
+    <span class="op-tag"><b>流明</b> IV｜战斗结束按存活干员数+1/+2（双叠聚合）</span>
+  </p>
+  <h3 class="sub">输出端（输出型干员）</h3>
+  <p>
+    <span class="op-tag out"><b>蓝毒</b> II｜每叠加2/1层攻击+1%</span>
+    <span class="op-tag out"><b>瑰盐</b> II｜每叠加3层攻击+1%/2%（双叠聚合）</span>
+  </p>
+  <h3 class="sub">推荐副盟约</h3>
+  <table>
+    <tr><th style="width:90px">副盟约</th><th style="width:70px">推荐度</th><th>搭配理由（机制协同）</th></tr>
+    <tr><td><b>灵巧</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>伊比利亚的全部触发词是<b>"每次造成伤害时"</b>：DoT至多叠10次、弹射概率按次结算——攻击次数是整个体系的直接自变量。灵巧的攻速光环（自身及周围4格，40层扩至8格）按攻速比例线性放大DoT叠满速度与弹射触发频率；蓝毒/瑰盐的"攻击力+%"输出端再被攻速二次放大。远程输出位集中站位即可全吃光环。</td></tr>
+    <tr><td><b>奥术</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>伤害构成几乎全法术：持续法伤（6在场×2）与弹射<b>300%攻击力法术伤害</b>——奥术逐击附加法伤与体系同系，3在场后敌人法抗逐次降低（上限受层数）对DoT与弹射双重乘算，且"至多-80%移速"的减速保证敌人停留在射程内承受完整DoT。棘刺（伊比利亚/奥术）双归属，其"按全场售出价格总和叠层（每回合至多12/24）"配合温妮（售出价3/6）、海沫（售出价成长）是体系最大的层数爆发源。</td></tr>
+    <tr><td><b>精准</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>3在场后扩展至<b>所有远程干员</b>+攻击无视双抗：DoT按攻击力比例结算，攻击力与穿透双收益；旅骨双归属（售出价格叠层）；远程载体站桩输出恰好与灵巧光环阵型重合，三个副盟约在同一批远程干员身上叠乘。</td></tr>
+    <tr><td><b>迅捷</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>引星棘刺（伊比利亚/迅捷）休整期+12/+24固定层，是全文档单次叠层量最大的词条之一；技能回转提高技能期间的伤害密度（弹射概率按次结算）。艾丽妮范围内每击倒回3/6技力形成击杀-回转小循环。</td></tr>
+    <tr><td><b>聚合</b></td><td class="rating r1"><span class="dot">●</span>备选</td><td>流明（战斗结束按存活数叠层）、瑰盐双归属；聚合的持续回血维持长时间站桩输出，DoT体系的输出与生存都在"时间轴"上，续航即输出。</td></tr>
+  </table>
+</div>
+
+<!-- ============ 8 叙拉古 ============ -->
+<div class="card" id="c8">
+  <div class="core-head"><span class="num">08</span><h3>叙拉古</h3><span class="idp">定位：部署攻速 · 异常状态连锁真伤</span></div>
+  <div class="mech"><b>机制摘要：</b>部署后攻击速度提升，持续一定时间（受层数）；6名不同干员在场：每次攻击有概率为敌人随机附加异常状态，敌人存在2种以上异常状态时每秒对其自身及周围造成真实伤害（受层数）。</div>
+  <h3 class="sub">层数来源（叠层型干员）</h3>
+  <p>
+    <span class="op-tag"><b>拉普兰德</b> I｜获得时+2/+4</span>
+    <span class="op-tag"><b>复奏</b> II｜本回合首次主动刷新+2/+4（双叠莱塔尼亚，整备区生效）</span>
+    <span class="op-tag"><b>伺夜</b> III｜每击倒+2/+4（每回合至多8/16，双叠精准，自带弱点伤害）</span>
+    <span class="op-tag"><b>安洁莉娜</b> IV｜休整期按本回合刷新次数+2/+4（每回合至多8/16）</span>
+    <span class="op-tag"><b>荒芜拉普兰德</b> VI｜每击倒+2/+4（每场至多20/40；精锐后全叙拉古共享此效果）</span>
+  </p>
+  <h3 class="sub">输出端（输出型干员）</h3>
+  <p>
+    <span class="op-tag out"><b>斥罪</b> IV｜每叠加3层攻击+1%/2%（双叠不屈）</span>
+    <span class="op-tag out"><b>贝洛内</b> V｜每叠加3层攻击+1%/2%（双叠突袭）</span>
+  </p>
+  <h3 class="sub">推荐副盟约</h3>
+  <table>
+    <tr><th style="width:90px">副盟约</th><th style="width:70px">推荐度</th><th>搭配理由（机制协同）</th></tr>
+    <tr><td><b>灵巧</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>6在场的异常状态<b>按每次攻击概率结算</b>，2异常触发的每秒真伤也依赖异常覆盖率——攻速是施加频率的一阶乘数；且核心词条本身就是"部署后攻速提升"，灵巧光环与之同系叠加，40层扩至8格覆盖全输出阵型。攻速还直接喂给斥罪、贝洛内两名"每叠3层+攻击"的输出端。</td></tr>
+    <tr><td><b>突袭</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td><b>"部署后攻击速度提升"在每次再部署时重新触发</b>——突袭的自动再部署=攻速增益的无限刷新循环；突袭再部署期间的攻/血提升（受层数）保证切入质量；50层全队攻速+50与灵巧、核心词条三层攻速叠加。贝洛内（叙拉古/突袭）双归属，自带突袭叠层。</td></tr>
+    <tr><td><b>精准</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>伺夜双归属且自带"伤害变为弱点伤害（按敌防御/法抗变换类型）"——3在场后精准扩展至所有远程干员+无视双抗，提高击倒效率，直接喂荒芜拉普兰德（每场至多40层）与伺夜（每回合至多16层）的击倒叠层；击倒越多→层越多→6在场真伤越强。</td></tr>
+    <tr><td><b>奇迹</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>体系内三名"刷新驱动"叠层干员（奥斯塔获得免费刷新、复奏首次刷新+2/4、安洁莉娜每刷新+2/4）与奇迹"刷新概率免费（受层数）+100层保底高阶干员"组成<b>零成本刷新→叠层</b>闭环；复奏在整备区即生效，不占场上位。</td></tr>
+    <tr><td><b>迅捷</b></td><td class="rating r1"><span class="dot">●</span>备选</td><td>忍冬（叙拉古/迅捷）获得时免费刷新（升级制至3次）；技能回转提高输出密度。铃兰进休整期触发身前干员的"获得时"效果，可与拉普兰德的获得时叠层联动。</td></tr>
+  </table>
+</div>
+
+<!-- ============ 9 炎 ============ -->
+<div class="card" id="c9">
+  <div class="core-head"><span class="num">09</span><h3>炎</h3><span class="idp">定位：获得即叠层 · 元素损伤爆发</span></div>
+  <div class="mech"><b>机制摘要：</b>攻击力提升（受层数）；6名不同干员在场：战斗开始时起，炎干员每次攻击造成攻击力一定比例的随机元素损伤，全场敌人元素损伤恢复速度提升（受层数）。</div>
+  <h3 class="sub">层数来源（叠层型干员，7名为全档最多）</h3>
+  <p>
+    <span class="op-tag"><b>拜松</b> I｜获得时+2/+4</span>
+    <span class="op-tag"><b>矩</b> II｜获得时获得等同调度中心等级（×2）的层数</span>
+    <span class="op-tag"><b>乌有</b> III｜获得时得盟约之币</span>
+    <span class="op-tag"><b>风絮</b> III｜休整期按本回合获得干员数+2/+4（每回合至多16/32，双叠聚合）</span>
+    <span class="op-tag"><b>余</b> IV｜周围八格元素损伤爆发+1/+2（每回合至多8/16，双叠坚守）</span>
+    <span class="op-tag"><b>仇白</b> IV｜获得时+6/+12（双叠灵巧）</span>
+    <span class="op-tag"><b>黍</b> V｜获得时+8/+16（双叠远见）</span>
+    <span class="op-tag"><b>烛煌</b> VI｜范围内元素损伤爆发+1/+2（每回合至多12/24，三叠维/迅捷）</span>
+    <span class="op-tag"><b>夕</b> VI｜休整期按本回合获得干员数+2/+4（每回合至多24/48，双叠奥术）</span>
+  </p>
+  <h3 class="sub">输出端（输出型干员）</h3>
+  <p>
+    <span class="op-tag out"><b>老鲤</b> V｜每叠加3层攻击+1%/2%（双叠投资人）</span>
+  </p>
+  <h3 class="sub">推荐副盟约</h3>
+  <table>
+    <tr><th style="width:90px">副盟约</th><th style="width:70px">推荐度</th><th>搭配理由（机制协同）</th></tr>
+    <tr><td><b>投资人</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>炎的7名叠层干员中5名以<b>"获得时"</b>为触发词（拜松、矩、乌有、仇白、黍）——投资人使获得时特质每次触发2次（100层3次），等于每次购买炎干员即双倍入层；矩的"获得等同调度中心等级的层数"在后期一次购买即可入账数十层，被翻倍后是全文档最恐怖的单次叠层。投资人干员可在整备区激活不占场上位；可露希尔（每获得+2/4）与锡人（获得时+4/8）自供投资人层数；老鲤（投资人/炎）双归属输出端。</td></tr>
+    <tr><td><b>灵巧</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>6在场后"每次攻击造成攻击力比例的随机元素损伤"——攻速=元素损伤施加频率=元素损伤<b>爆发</b>频率；而余（每回合至多8/16）与烛煌（12/24）恰按爆发事件叠层，全链路被攻速加速。仇白（炎/灵巧）获得时+6/+12双叠层，一人同时喂两盟约。</td></tr>
+    <tr><td><b>奥术</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>夕（炎/奥术）休整期按获得干员数双叠层（每回合至多24/48）是体系内上限最高的持续供层；奥术"造成伤害时附加法术伤害"与"每次攻击元素损伤"同为逐击加成，均随攻击次数线性增长，攻速收益双倍。</td></tr>
+    <tr><td><b>远见</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>黍（炎/远见）获得时炎+8/16、远见+4/8双叠层——经投资人翻倍后单次购买最多+32炎层；远见<b>每叠加10层获得2资金</b>反哺购人，购人又是获得事件，形成"买人→层→资金→买人"的自增强循环；80/150层两次永久降价进一步降低循环成本。</td></tr>
+    <tr><td><b>聚合 / 迅捷</b></td><td class="rating r1"><span class="dot">●</span>备选</td><td>聚合：风絮双叠层；范围回血+回复元素损伤（受层数）提高站桩容错。迅捷：烛煌三重归属（炎/维/迅捷）按元素爆发双叠层，休整期迅捷层数由引星棘刺式干员补足。</td></tr>
+  </table>
+  <p class="rec-note">※ 提示：6在场词条同时提升敌方元素损伤恢复速度（受层数）——元素损伤体系依赖高频施加维持量表，攻速与爆发频率（灵巧/奥术路线）比单次伤害更重要。</p>
+</div>
+
+<!-- ============ 10 莱塔尼亚 ============ -->
+<div class="card" id="c10">
+  <div class="core-head"><span class="num">10</span><h3>莱塔尼亚</h3><span class="idp">定位：击杀召唤滚雪球 · 人海输出</span></div>
+  <div class="mech"><b>机制摘要：</b>干员和召唤物攻击力提升（受层数）；场上敌方被击倒时在附近召唤"一个小节"（场上至多10个）；6名不同干员在场：召唤时概率（受层数）改为"一个乐部"（在场使莱塔尼亚攻速提升），召唤物上限提至20，我方干员被击倒时额外召唤一个小节。</div>
+  <h3 class="sub">层数来源（叠层型干员）</h3>
+  <p>
+    <span class="op-tag"><b>地灵</b> I｜范围内击倒+1/+2（每回合至多1/2）</span>
+    <span class="op-tag"><b>折光</b> II｜休整期结束+4/+8</span>
+    <span class="op-tag"><b>复奏</b> II｜首次主动刷新+2/+4（双叠叙拉古，整备区生效）</span>
+    <span class="op-tag"><b>黑键</b> IV｜范围内击倒+1/+2（每回合至多8/16，双叠精准）</span>
+    <span class="op-tag"><b>纯烬艾雅法拉</b> V｜范围内击倒+2/+4（每场至多20/40，三叠聚合/远见）</span>
+    <span class="op-tag"><b>薇薇安娜</b> V｜同类盟约叠层上限+7/+14（三叠卡西米尔/奥术）</span>
+  </p>
+  <h3 class="sub">输出端（输出型干员）</h3>
+  <p>
+    <span class="op-tag out"><b>艾雅法拉</b> IV｜每叠加2/1层技力回复+0.02/秒、攻击+1%（双叠奥术）</span>
+    <span class="op-tag out"><b>锏</b> VI｜每叠加6/3层技力回复+0.01/秒、生命上限+1%（三叠卡西米尔/谢拉格）</span>
+  </p>
+  <h3 class="sub">推荐副盟约</h3>
+  <table>
+    <tr><th style="width:90px">副盟约</th><th style="width:70px">推荐度</th><th>搭配理由（机制协同）</th></tr>
+    <tr><td><b>精准</b></td><td class="rating r3"><span class="dot">●●●</span>首选</td><td>体系是"击倒→召唤小节→攻击力提升（受层数，含召唤物）"的滚雪球，击倒效率是雪球斜率。黑键（莱塔尼亚/精准）双归属，范围内击倒双叠层；3在场后精准扩展至<b>所有远程干员</b>+攻击无视双抗——把清场效率全队化，小节产出速度与层数增速同步提升；远程位居阵型后侧，生存压力小、输出轴稳定。</td></tr>
+    <tr><td><b>奥术</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>艾雅法拉（莱塔尼亚/奥术）每叠加1层（精锐）即+0.02/秒技力回复+1%攻击——叠层与技术循环互相放大，清场越快击倒越多；3在场后敌人法抗逐次降低放大技能清场；薇薇安娜（莱塔尼亚/卡西米尔/奥术）三重归属，其"同类盟约叠层上限+7/+14"直接把地灵（1/2）、黑键（8/16）的每回合上限翻近倍，是体系的叠层天花板钥匙。</td></tr>
+    <tr><td><b>聚合</b></td><td class="rating r2"><span class="dot">●●</span>推荐</td><td>纯烬艾雅法拉（聚合/莱塔尼亚/远见）三重归属，范围内击倒同时喂莱塔尼亚与聚合；聚合范围每秒回血+回复元素损伤+3在场庇护——人海召唤体系（上限20召唤物）的本质是"以多打多"，群体续航保住场面即保住雪球；夜莺（聚合/协防干员）战斗结束按存活数叠层与流明同理。</td></tr>
+    <tr><td><b>远见 / 坚守 / 迅捷</b></td><td class="rating r1"><span class="dot">●</span>备选</td><td>远见：每10层+2资金用于购入莱塔尼亚干员凑6在场（乐部攻速光环+召唤上限20是质变门槛），纯烬艾雅法拉三重归属自带远见叠层。坚守：车尔尼（莱塔尼亚/坚守）获得时得小鼓；6在场"我方死亡额外召唤小节"提供减员补偿，但优先不减员。迅捷：卡涅利安三重归属获得作战粮；技能回转提高清场频率。</td></tr>
+  </table>
+</div>
+
+<!-- ============ 通用引擎 ============ -->
+<h2 class="sec">五、跨体系通用引擎干员</h2>
+<div class="card">
+  <p>以下干员的特质作用于"层数体系"本身而非单一盟约，任何核心×副盟约组合中都应优先考虑其站位：</p>
+  <table>
+    <tr><th style="width:130px">干员</th><th style="width:250px">特质（精锐档）</th><th>引擎作用</th></tr>
+    <tr><td><b>阿米娅</b> [V·奇迹]</td><td>身前一格干员提升盟约层数时，每次提升层数额外+2（不受叠层上限影响）</td><td><b>全体系第一放大器</b>：放在任何"每回合至多叠加X层"的叠层干员身前，等效突破上限；"不受上限影响"是唯一无天花板的词条。</td></tr>
+    <tr><td><b>薇薇安娜</b> [V]</td><td>场上其他与自身拥有相同盟约的干员叠层上限+14</td><td>上限增幅器：与卡西米尔/莱塔尼亚/奥术任一体系组合都成倍解锁每回合/每场叠层上限。</td></tr>
+    <tr><td><b>华法琳</b> [IV·灵巧/聚合]</td><td>战斗开始时使身前一格干员获得"开启技能时叠层+2（每回合至多14）"特质</td><td>把任意非叠层干员改造成叠层干员；与迅捷（技能回转）联动时收益翻倍。</td></tr>
+    <tr><td><b>凛御银灰</b> [V·谢/灵/投]</td><td>身前谢拉格/灵巧干员每场战斗叠层上限+150%</td><td>谢拉格与灵巧双体系的上限钥匙，投资人三重归属。</td></tr>
+    <tr><td><b>铃兰</b> [V·叙拉古]</td><td>进休整期时触发身前两格干员的"获得时"类效果</td><td>与投资人同构的"获得时再触发"引擎：放在炎/谢拉格/维多利亚的获得时叠层干员身前，休整期白拿一轮层数/道具。</td></tr>
+    <tr><td><b>Mon3tr</b> [V·协防干员]</td><td>周围八格干员每场战斗叠层上限+60%</td><td>范围版上限增幅，且不占用盟约位（协防为特殊盟约）。</td></tr>
+    <tr><td><b>魔王</b> [VI·调和]</td><td>休整期结束时使已激活的核心盟约层数+20</td><td>调和干员自带"核心层数泵"——每休整期+20层核心盟约，任何核心体系的固定层发动机。</td></tr>
+    <tr><td><b>塞雷娅</b> [V·坚守/协防干员]</td><td>身前一格干员若为"休整期结束时"特质，复制该特质</td><td>特质复制器：复制慕斯/折光/涤火杰西卡等休整期叠层干员，双倍执行。</td></tr>
+  </table>
+</div>
+
+<!-- ============ 特殊盟约 ============ -->
+<h2 class="sec">六、特殊盟约与补充说明</h2>
+<div class="card">
+  <h3 class="sub">特殊盟约（按任务分类不参与主搭配，但影响构筑）</h3>
+  <ul>
+    <li><span class="tag sp">调和</span><b>激活时使场上核心盟约的激活人数+1</b>，调和干员享受已激活核心盟约效果——等价于用1个盟约位凑"6名不同干员在场"门槛，对谢拉格（巨人+不融冰）、维多利亚（装备攻击）等6在场质变型核心价值极高；魔王（调和）另附"核心层数+10/20每休整期"。</li>
+    <li><span class="tag sp">协防干员</span>全体受伤-20%，协防干员伤害120%/精锐140%——独立增益体系，塞雷娅（复制休整期特质）、Mon3tr（范围叠层上限+60%）、机械师（同行3人补人）自带跨体系引擎。</li>
+    <li><span class="tag sp">独行</span>在场仅1名独行干员时攻/血+60%、初始技力+15（2名及以上失效）——适合作为单插的"自由人"槽位，不与盟约体系冲突。</li>
+  </ul>
+  <h3 class="sub">未分类盟约</h3>
+  <ul>
+    <li><span class="tag core">绝技</span>bonds.xlsx 中第26个盟约（任务分类未涵盖）：<b>在场2名精锐干员→精锐攻击+30%；5名→技力消耗-30%</b>。因"所有干员的精锐状态均可激活"，绝技实际是精锐化投资的通用放大器，与阶数高、精锐售价高的体系（如依赖精锐翻倍的叠层干员）天然契合。</li>
+  </ul>
+  <div class="callout">
+    <b>三条实战提醒：</b>①多数叠层干员有"每回合/每场战斗至多叠加X层"的硬上限，<b>上限是比触发频率更先到的瓶颈</b>——阿米娅、薇薇安娜、凛御银灰、Mon3tr的上限增幅词条因此价值极高；②远见/奇迹/投资人三类副盟约的干员<b>在整备区即可用于激活</b>，不占用场上6人名额，是"零成本"的第二盟约；③多盟约干员（烛煌、凛御银灰、锏、薇薇安娜、复奏、纯烬艾雅法拉等）是跨体系的桥梁，实际构筑应以其为轴选择双核心/三核心组合。
+  </div>
+</div>
+
+<!-- ============ 结论 ============ -->
+<h2 class="sec">七、结论</h2>
+<div class="card">
+  <ol>
+    <li><strong>首选搭配一览（每个核心的第一推荐）：</strong>乌萨斯→助力；萨尔贡→迅捷；阿戈尔→坚守；卡西米尔→突袭/不屈（双首选）；维多利亚→助力；谢拉格→投资人；伊比利亚→灵巧/奥术（双首选）；叙拉古→灵巧/突袭（双首选）；炎→投资人/灵巧（双首选）；莱塔尼亚→精准。</li>
+    <li><strong>搭配逻辑可归纳为三问：</strong>核心盟约的触发词是什么（部署？技能？攻击？获得？）→选放大该触发词的副盟约（突袭/不屈、迅捷、灵巧、投资人）；核心有没有固定层数阈值（25层/100层/每20层档位）→选固定层供给（助力）或获取翻倍（投资人）；核心的伤害是否集中于法术→是则奥术的法抗衰减提供全档唯一穿透乘区。</li>
+    <li><strong>经济类副盟约（远见/奇迹/投资人）是被低估的稳定性来源：</strong>三者均支持整备区激活，不挤占场上位与盟约位；远见的"每10层+2资金"与炎的"获得即叠层"互为因果，是文档中唯一自我强化的经济循环。</li>
+    <li><strong>风险与不确定性：</strong>文档中大量"受层数影响"的具体比例未给出数值，本报告的推荐度评级基于机制方向而非精确收益计算；实战中仍需结合干员获取随机性（调度中心刷新）与敌方阵容调整——精准的"无视双抗"在高防关收益放大，坚守/聚合的生存类协同在高压关收益放大。</li>
+  </ol>
+</div>
+
+<footer>
+  核心盟约 × 副盟约 搭配分析报告 ｜ 数据来源：operators(1).xlsx（155干员）+ bonds.xlsx（26盟约） ｜ 仅基于文档内机制与数值推导 ｜ 2026-11-09
+</footer>
+
+</div>
+</body>
+</html>
